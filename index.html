@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- SEO -->
+  <title>Buy Luxury Perfumes Online | Grovikto</title>
+  <meta name="description" content="Discover Grovikto Perfumes — crafted with pure essences and rare botanicals. Luxury fragrances that define you. Make Your Identity Now.">
+  <meta name="keywords" content="luxury perfumes, natural perfumes, Grovikto fragrances, niche perfumes, signature scents, Make Your Identity Now">
+  <!-- SEO -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+        body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #ffffff;
+      color: #2e2e2e;
+    }
+    header {
+      text-align: center;
+      padding: 1rem;
+      margin-bottom: 0rem;
+    }
+    .logo {
+      max-width: 300px;
+      margin-top: 10px;
+    }
+    h1 {
+      font-size: 2.1rem;
+      margin: 1rem 0 0.5rem;
+      color: ;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #595454;
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 5px;
+    }
+    #cartCount {
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      /*position: absolute;*/
+      top: -8px;
+      right: -12px;
+    }
+    .cart-section {
+      padding: 0rem 0rem;
+      background: #ffffff;
+    }
+    .product-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+ .cart-product {
+  border: 1px solid #ccc;
+  padding: 0.7rem;
+  width: 200px; /* slightly narrower */
+  border-radius: 10px;
+  text-align: center;
+  background: white;
+  min-height: 285px; /* control height */
+   }
+
+   @media (max-width: 599px) {
+  .cart-product {
+    flex: 1 1 calc(50% - 1rem);
+    max-width: calc(50% - 1rem);
+    box-sizing: border-box;
+  }
+
+  #productList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.video-wrapper video {
+  width: 100%;
+  display: block;
+}
+
+.video-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #4caf50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+
+
+    .qty-control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .qty-control button {
+      padding: 0.3rem 0.7rem;
+      border: none;
+      background: #2e8b58;
+      color: white;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .checkout {
+      display: inline-block;
+      margin-top: 1.5rem;
+      background: #2c5c2e;
+      color: white;
+      padding: 0.8rem 2rem;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .slider-wrapper {
+      max-width: 1000px;
+      margin: 1rem auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .slider {
+      position: relative;
+      height: 300px;
+    }
+    .slide {
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      width: 100%;
+      height: 100%;
+    }
+    .slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .slide-text {
+      position: absolute;
+      bottom: 20px;
+      left: 30px;
+      color: white;
+      background: rgba(0,0,0,0.5);
+      padding: 12px 20px;
+      border-radius: 10px;
+      max-width: 80%;
+      display: none;
+    }
+    .about,
+    .contact {
+      flex: 1;
+      min-width: 300px;
+      background-color: #2d4d37;
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+    }
+    .product-section {
+      background-color: #1e3d2f;
+      color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin: 2rem;
+      text-align: center;
+    }
+    .product-image {
+      width: 260px;
+      border-radius: 12px;
+      margin: 1rem 0;
+    }
+    .sidebar-toggle {
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 1rem;
+      position: fixed;
+      top: 60px;
+      left: 10px;
+      z-index: 1001;
+      background: #2c5c2e;
+      color: white;
+      border-radius: 6px;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -240px;
+      width: 220px;
+      height: 100%;
+      background-color:#595454;
+      color: white;
+      padding-top: 4rem;
+      transition: 0.3s ease-in-out;
+      z-index: 1000;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    }
+    .sidebar a {
+      display: block;
+      color: white;
+      padding: 14px 18px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .sidebar a:hover {
+      background-color: #2c5c2e;
+    }
+    .toast {
+  visibility: hidden;
+  min-width: 280px;
+  background-color: #2c5c2e;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px 20px;
+  position: fixed;
+  z-index: 1001;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+ .tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 2rem 0 1rem;
+    gap: 1rem;
+  }
+
+  .tab-btn {
+    padding: 10px 16px;
+    border-radius: 5px;
+    border: 1px solid #2c5c2e;
+    color: #151515;
+    background: #fbfbfb;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .tab-btn.active {
+    background-color: #595454;
+    color: white;
+  }
+
+.toast.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein {
+  from { bottom: 0; opacity: 0; }
+  to { bottom: 30px; opacity: 1; }
+}
+@keyframes fadeout {
+  from { bottom: 30px; opacity: 1; }
+  to { bottom: 0; opacity: 0; }
+}
+
+.floating-cart {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #2e8b57;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 1000;
+  text-decoration: none;
+}
+.floating-cart span {
+  background: red;
+  padding: 2px 8px;
+  border-radius: 50%;
+  margin-left: 6px;
+  font-size: 12px;
+}
+@media (max-width: 768px) {
+  .slider {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.segment {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+.segment-btn {
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid #1b1c1b;
+  background: #fff;
+  color: black;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+.segment-btn.active {
+  background: #595454;
+  color: white;
+}
+.stock-label {
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+/*.testimonial-card {
+  min-width: 130px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  animation: popupCard 0.6s ease forwards;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: scale(0.8);
+}
+*/
+.testimonial-card .comment {
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #2c5c2e;
+  margin-bottom: 0.5rem;
+}
+
+.testimonial-card .stars {
+  color: gold;
+  font-size: 1.1rem;
+}
+
+.testimonial-card .customer-name {
+  font-weight: bold;
+  color: #555;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+#testimonialWrapper {
+  display: flex;
+  gap: 0rem;
+  width: max-content;
+  animation: scrollRightToLeft 21s linear infinite;
+}
+
+@keyframes scrollRightToLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes popupCard {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Duplicate cards to make infinite loop smoother */
+#testimonialWrapper::after {
+  content: '';
+  display: block;
+  width: 100%;
+}
+
+.authentic-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 10px; /* LEFT aligned */
+  z-index: 999;
+  width: 90%;
+  max-width: 360px;
+}
+
+.toast-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: transform 0.6s ease, opacity 0.3s ease;
+}
+
+.toast-card.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toast-card.hide {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
+.media-container {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.media-container img,
+.media-container iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.text-container {
+  flex: 1;
+}
+
+.text-container h3 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  color: #2e8b57;
+}
+
+.text-container p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #444;
+}
+
+@media (max-width: 480px) {
+  .toast-card {
+    flex-direction: row;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .media-container {
+    width: 60px;
+    height: 60px;
+  }
+
+  .text-container h3 {
+    font-size: 0.9rem;
+  }
+
+  .text-container p {
+    font-size: 0.75rem;
+  }
+}
+p.ex1 {
+  margin-top:-5px;
+  margin-bottom: 1%;
+}
+
+
+/*@media (max-width: 768px) {
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* exactly 2 cards per row */
+    gap: 12px; /* gap between cards */
+    padding: 0 10px; /* optional slight side padding */
+    box-sizing: border-box;
+  }
+
+  .cart-product {
+    width: 100%;
+    max-width: unset; /* remove fixed width */
+    margin: 0; /* no auto-centering needed */
+  }
+
+  .cart-product h3 {
+        margin-block-start:0.3em;
+        margin-block-end:0.3em;
+  }
+}
+*/
+  </style>
+    <style>
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 280px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: -2px 0 15px rgba(0, 0, 0, 0.3);
+      z-index: 2000;
+      overflow-y: auto;
+      transition: right 0.5s ease-in-out;
+      padding: 1rem;
+    }
+    .cart-drawer.open {
+      right: 0;
+    }
+    .cart-drawer h3 {
+      margin-top: 0;
+      color: #2c5c2e;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0rem 0;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .cart-item img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .cart-details {
+      flex: 1;
+    }
+    .cart-details p {
+      margin: 0.3rem 0;
+      font-size: 0.9rem;
+    }
+    .cart-details button {
+      padding: 4px 10px;
+      margin: 0 4px;
+      font-size: 1rem;
+      background: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .cart-actions {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #ccc;
+    }
+    .close-cart-btn {
+      position: relative;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      align:left;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+    }
+    .button1 {
+      display: inline-block;
+      margin-top: 1.5rem;
+      background: linear-gradient(135deg, #2c5c2e, #2c5c2e);
+      color: white;
+      padding: 0.8rem 0.8rem;
+      border-radius: 5px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      width: 60%;
+      transition: transform 0.2s ease;
+    }
+    .button1:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+  <div class="sidebar" id="sidebar">
+    <a href="index.html">Home</a>
+    <a onclick="handleCartClick()">Place Order</a>
+    <a href="customerorder.html">Track Order</a>
+    <a href="adminlogin.html">Admin</a>
+  </div>
+
+
+  <style>
+    .floating-place-order {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  padding: 10px 0;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.floating-place-order .button1 {
+  background-color: #2e8b57;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.floating-place-order .button1:hover {
+  background-color: #1f4021;
+}
+
+  </style>
+
+ <style>
+ .video-scroll-section {
+  padding: 20px;
+  background-color: #fff;
+  text-align: center;
+  position: relative;
+}
+
+.video-scroll-section h2 {
+  margin-bottom: 16px;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.video-scroll-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-scroll-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  padding: 10px 0;
+}
+
+.video-scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.video-card {
+  flex: 0 0 auto;
+  width: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.video-card video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  color: #444;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 10;
+  transition: background 0.3s;
+}
+
+.scroll-arrow:hover {
+  background: #f0f0f0;
+}
+
+.scroll-arrow.left {
+  left: -20px;
+}
+
+.scroll-arrow.right {
+  right: -20px;
+}
+
+.main-header {
+  text-align: center;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+.logo {
+  max-width: 180px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: black;
+  margin: 0.5rem 0 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.action-btn {
+  background-color: #595454;
+  color: white;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  flex: 0 1 auto;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.action-btn:hover {
+  background-color: #226c39;
+}
+
+<style>
+
+.info-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: auto;
+  gap: 20px;
+}
+
+.info-box {
+  flex: 1 1 45%;
+  background-color: #fff;
+  padding: 20px 22px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.info-box:hover {
+  transform: translateY(-3px);
+}
+
+.info-box h3 {
+  color: #007B55;
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+}
+
+.info-box p {
+  color: #444;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.info-box a {
+  color: #007B55;
+  text-decoration: none;
+}
+
+.info-box a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .info-box {
+    flex: 1 1 100%;
+  }
+}
+</style>
+
+<style>
+.info-section {
+  background-color: #f9f9f9;
+  padding: 15px 0px;
+}
+
+.info-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: auto;
+  gap: 0; /* no gap to make border visible */
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+.info-box {
+  flex: 1 1 50%;
+  background-color: #fff;
+  padding: 16px 18px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  border-right: 1px solid #e0e0e0;
+}
+
+.info-box:last-child {
+  border-right: none;
+}
+
+.info-box h3 {
+  color: #007B55;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.info-box p {
+  color: #444;
+  margin-bottom: 6px;
+  font-size: 0.92rem;
+}
+
+.info-box a {
+  color: #007B55;
+  text-decoration: none;
+}
+
+.info-box a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .info-container {
+    flex-direction: column;
+    border: none;
+    box-shadow: none;
+  }
+
+  .info-box {
+    flex: 1 1 100%;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .info-box:last-child {
+    border-bottom: none;
+  }
+}
+</style>
+
+<style>
+
+    .apply-coupon input {
+      padding: 8px;
+      width: 60%;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .apply-coupon button {
+      padding: 8px 12px;
+      margin-left: 6px;
+      background: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #couponFeedback {
+      margin-top: 6px;
+      font-weight: bold;
+    }
+    .summary p {
+      margin: 8px 0;
+    }
+    #couponRow {
+      display: none;
+      color: green;
+    }
+     #availableCoupons {
+      margin-top: 14px;
+      padding: 10px;
+      background: #e8f5e9;
+      border-left: 4px solid #2e8b57;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+  </style>
+
+  <style>
+    .offer-marquee {
+      background: #626764; /* green brand color */
+      color: white;
+      font-weight: 600;
+      padding: 8px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      z-index: 999;
+    }
+
+    .marquee {
+      display: inline-block;
+      white-space: nowrap;
+      padding-left: 100%;
+      animation: marqueeScroll 15s linear infinite;
+    }
+
+    .marquee span {
+      margin-right: 3rem;
+      font-size: 1rem;
+    }
+
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* Pause marquee on hover (optional) */
+    .offer-marquee:hover .marquee {
+      animation-play-state: paused;
+    }
+  </style>
+
+
+ <div class="cart-drawer" id="cartDrawer">
+   <button class="close-cart-btn" onclick="toggleCartDrawer(false)">&times;</button>
+  
+  <div class="floating-place-order">
+
+  <div id="availableCoupons">Loading available coupons...</div>
+     <div class="apply-coupon">
+    <input type="text" id="couponCode" placeholder="Apply Coupon Code" />
+    <button onclick="applyCoupon()" style="margin-top: 5px;">Apply</button>
+    <div id="couponFeedback"></div>
+  </div>
+
+  <div class="summary">
+    <p id="couponRow">Coupon Discount: Rs.<span id="discountAmount">0</span></p>
+    <p>Subtotal: Rs.<span id="subtotalAmt">0</span></p>
+    <p>GST (5%): Rs.<span id="gstAmt">0</span></p>
+     <p>Delivery Charges: Rs.<span id="deliverycharges">0</span></p>
+    <strong>Total: Rs.<span id="cartTotal">0</span></strong>
+  </div>
+    <a onclick="redirectToCheckout()" class="button1">Place Order</a>
+  </div>
+  <h3>Your Cart</h3>
+  <div id="cartItemsContainer"></div>
+</div>
+
+<script>
+  // Click outside to close
+  document.addEventListener("click", function(event) {
+    const drawer = document.getElementById("cartDrawer");
+    const drawer1 = document.getElementById("sidebar");
+     if (!drawer.contains(event.target)) {
+         if (isCartOpen){
+             isCartOpen = false;
+          }else{
+            toggleCartDrawer(false);
+          }
+     }
+
+      if (!drawer1.contains(event.target))
+      {
+          console.log(isSideDrawerOpen);
+          if (isSideDrawerOpen){
+              isSideDrawerOpen = false;
+          }else{
+             sidebar.style.left = '-240px';
+            const sideBarToggle = document.getElementById('sidebar-toggle');
+            sideBarToggle.style.top = '60px';
+          }
+      }
+
+          
+
+  });
+
+  document.addEventListener("touchstart", function(event) {
+    const drawer = document.getElementById("cartDrawer");
+     if (!drawer.contains(event.target)) {
+         if (isCartOpen){
+             isCartOpen = false;
+          }else{
+            toggleCartDrawer(false);
+          }
+     }
+  });
+</script>
+
+
+
+  <header class="main-header">
+
+    <!-- 🔥 Marquee Offer Banner -->
+    <section class="offer-marquee">
+      <div class="marquee" id="marquee-offers"></div>
+    </section>
+
+    <img src="https://verdantragrows.my.canva.site/_assets/media/5905e8339237cf372183c523f1486957.png" alt="Verdantra Logo" class="logo"/>
+  <p class="tagline">Make Your Identity</p>
+
+  <div class="action-buttons">
+    <a href="tel:+919923566591" class="action-btn call-btn"> CALL NOW</a>
+    <a href="https://wa.me/919923566591?text=Hi%2C%20I'm%20interested%20in%20Verdantra%20products" class="action-btn chat-btn" target="_blank">CHAT NOW</a>
+    <a href="javascript:void(0);" class="action-btn cart-btn" onclick="handleCartClick()">🛒 CART <span id="cartCount">0</span></a>
+  </div>
+</header>
+
+
+  <section class="slider-wrapper">
+    <div class="slider" id="sliderContainer"></div>
+   </section>
+
+
+<!-- <section class="video-scroll-section">
+  <h2>Brand Love in Motion</h2>
+  <div class="video-scroll-wrapper">
+    <button class="scroll-arrow left" onclick="scrollVideos(-1)">&#10094;</button>
+    <div class="video-scroll-container" id="videoScroll">
+      <div class="video-card">
+        <video autoplay loop muted playsinline>
+          <source src="https://cdn.pixabay.com/video/2025/03/29/268528_tiny.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="video-card">
+        <video autoplay loop muted playsinline>
+          <source src="https://cdn.pixabay.com/video/2025/05/04/276646_tiny.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="video-card">
+        <video autoplay loop muted playsinline>
+          <source src="https://cdn.pixabay.com/video/2025/04/29/275498_tiny.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="video-card">
+        <video autoplay loop muted playsinline>
+          <source src="https://cdn.pixabay.com/video/2025/03/03/262215_tiny.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+    <button class="scroll-arrow right" onclick="scrollVideos(1)">&#10095;</button>
+  </div>
+</section> -->
+
+
+
+<!--   <section id="customerTestimonials" style="margin: 2rem auto; max-width: 1000px; overflow: hidden;">
+  <h2 style="text-align:center;color:#2c5c2e;">What Our Customers Say</h2>
+  <div id="testimonialWrapper" style="display: flex; gap: 1rem; animation: scrollRightToLeft 4s linear infinite;">
+    <div class="testimonial-card">
+      <p class="comment">"Absolutely love the aroma and purity!"</p>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="customer-name">– Anjali</div>
+    </div>
+    <div class="testimonial-card">
+      <p class="comment">"Fast delivery, neat packaging, excellent quality."</p>
+      <div class="stars">⭐⭐⭐⭐</div>
+      <div class="customer-name">– Ramesh</div>
+    </div>
+    <div class="testimonial-card">
+      <p class="comment">"It reminds me of my grandma’s homemade ghee."</p>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="customer-name">– Priya</div>
+    </div>
+    <div class="testimonial-card">
+      <p class="comment">"I will definitely reorder – so fresh!"</p>
+      <div class="stars">⭐⭐⭐⭐</div>
+      <div class="customer-name">– Vikram</div>
+    </div>
+  </div>
+</section> -->
+
+<style>
+.testimonial-card {
+  background: #fff;
+  padding: 0rem;
+  border-radius: 10px;
+  margin: 0.3rem;
+  min-width: 10px;
+}
+#testimonialWrapper:hover {
+  animation-play-state: paused;
+}
+</style>
+
+
+<section id="customerTestimonials" style="margin: 2rem auto; max-width: 1000px; overflow: hidden;">
+  <h2 style="text-align:center;color:#595454;">What Our Customers Say</h2>
+  <div style="display: flex; width: 100%; overflow: hidden;">
+    <div id="testimonialWrapper"></div>
+  </div>
+</section>
+
+<script>
+  const wrapper = document.getElementById("testimonialWrapper");
+
+  // Desktop hover support
+  wrapper.addEventListener("mouseenter", () => wrapper.classList.add("paused"));
+  wrapper.addEventListener("mouseleave", () => wrapper.classList.remove("paused"));
+
+  // Mobile touch support
+  wrapper.addEventListener("touchstart", () => wrapper.classList.add("paused"));
+  wrapper.addEventListener("touchend", () => wrapper.classList.remove("paused"));
+  wrapper.addEventListener("touchcancel", () => wrapper.classList.remove("paused"));
+</script>
+
+
+
+  <section class="cart-section">
+    <h2 style="text-align:center;color:#595454">Buy Online</h2>
+
+    <!-- Search and Filter Bar -->
+    <div style="text-align: center; margin-bottom: 1rem; display: none;">
+    <input  type="text" id="searchInput" placeholder="Search products..." oninput="renderProducts()" style="padding: 8px; width: 250px; border: 1px solid #ccc; border-radius: 8px;" />
+     <label style="margin-left: 1rem;">
+        <input type="checkbox" id="inStockOnly" onchange="renderProducts()" /> In Stock Only
+      </label>
+    </div>
+
+    <section class="tabs" id="categoryTabs"></section>
+    <div class="product-list" id="productList"></div>
+    <div style="text-align:center; margin-top: 0.6rem;align-items: center;">
+      <a onclick="redirectToCheckout()" class="button1" style="width: 30%">Place Order</a>
+    </div>
+  </section>
+
+  <!-- <section class="product-section">
+    <h2>Our Authentic Products</h2>
+    <img src="https://verdantragrows.my.canva.site/_assets/media/8290353ebf1100816dac2b34adfa30ba.jpg" alt="A2 Cow Ghee" class="product-image" />
+    <h3>Grovikto A2 Cow Ghee</h3>
+    <p>Hand-churned from indigenous Gir cow milk, our A2 ghee is rich in nutrition and flavor.</p>
+  </section> -->
+
+  <section id="authenticProduct">
+ <!--  <h2 style="text-align:left; padding-left:1rem;">Our Authentic Products</h2> -->
+  <div id="authenticNotification" class="authentic-toast">
+    <div class="toast-card" id="popupCard">
+      <div class="media-container">
+        <img loading="lazy" id="popupImage" src="" alt="Product" />
+        <iframe id="popupVideo" src="" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="text-container">
+        <h3 id="popupTitle"></h3>
+        <p id="popupDesc"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="video-scroll-section" id="videoSection">
+  <h2 style="color: #595454">Brand Love in Motion</h2>
+  <div class="video-scroll-wrapper">
+    <button class="scroll-arrow left" onclick="scrollVideos(-1)">&#10094;</button>
+    <div class="video-scroll-container" id="videoScroll">
+      <!-- Firebase videos will be injected here -->
+    </div>
+    <button class="scroll-arrow right" onclick="scrollVideos(1)">&#10095;</button>
+  </div>
+</section>
+
+
+<section class="info-section"> 
+  <div class="info-container">
+    <div class="info-box about">
+      <h3 style="color: #595454">About Grovikto</h3>
+      <p>
+        At <strong>Grovikto Perfumes</strong>, we believe fragrance is not just something you wear — it’s who you are. Every scent is a signature, every note a reflection of your inner world. Our philosophy is simple yet powerful: <em>Make Your Identity Now.</em>
+      </p>
+      <p>
+        We are more than a perfume house; we are a movement that celebrates individuality and self-expression. Born from a passion to reconnect with nature’s purity, Grovikto crafts fragrances that inspire confidence, authenticity, and timeless elegance.
+      </p>
+      <p>
+        Each perfume is created with intention — blending rare botanicals and pure essences to awaken the senses, uplift the spirit, and tell your story. From the first spritz to the lingering trail, every fragrance becomes a part of you, shaping how the world remembers your presence.
+      </p>
+      <p>
+        <strong>Grovikto</strong> is for those who dare to stand apart, who embrace authenticity, and who believe their scent is their identity.
+      </p>
+      <p>
+        Join us in redefining luxury as something deeply personal, where every drop of fragrance is a statement of who you are.
+      </p>
+      <p><strong>Grovikto Perfumes — Make Your Identity Now.</strong></p>
+    </div>
+      <div class="info-box contact">
+      <h3 style="color: #595454">Contact Us</h3>
+      <p><strong>Email:</strong> <a href="mailto:verdantragrows@gmail.com">verdantragrows@gmail.com</a></p>
+      <p><strong>Phone:</strong> <a href="tel:+919923566591">+91-9923566591</a></p>
+      <p><strong>WhatsApp:</strong> <a href="https://wa.me/919923566591" target="_blank">Chat with us</a></p>
+    </div>
+  </div>
+</section>
+
+
+  <div id="toast" class="toast">Your cart is empty. Please select a product.</div>
+  <a href="javascript:void(0);" class="floating-cart" onclick="handleCartClick()">
+    🛒 <span id="floatingCartCount">0</span>
+  </a>
+
+  <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+    authDomain: "verdantra-grows.firebaseapp.com",
+    projectId: "verdantra-grows",
+    storageBucket: "verdantra-grows.appspot.com",
+    messagingSenderId: "642225222429",
+    appId: "1:642225222429:web:b32000eda4a1195a45a7f4"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  let allProducts = [];
+  let cart = JSON.parse(localStorage.getItem("cartData") || '{}');
+  let selectedCategory = 'All';
+  const selectedSizes = {};
+
+  async function loadOffers() {
+    const querySnapshot = await db.collection("offers").get();
+    const marqueeSection = document.querySelector(".offer-marquee");
+    const marquee = document.getElementById("marquee-offers");
+
+    marquee.innerHTML = "";
+
+    if (querySnapshot.empty) {
+      // ✅ Hide section if no offers
+      marqueeSection.style.display = "none";
+      return;
+    }
+
+    // ✅ Show section if offers exist
+    marqueeSection.style.display = "block";
+
+    querySnapshot.forEach((doc) => {
+      let offer = doc.data().text;
+      let span = document.createElement("span");
+      span.textContent = offer + " | ";
+      marquee.appendChild(span);
+    });
+  }
+
+
+
+  loadOffers();
+
+async function loadVideoScroll() {
+  const container = document.getElementById("videoScroll");
+  const section = document.getElementById("videoSection");
+  container.innerHTML = "";
+
+  try {
+    const snapshot = await db.collection("videos")
+      .where("active", "==", true)
+      .orderBy("created", "desc")
+      .get();
+
+    if (snapshot.empty) {
+      section.style.display = "none";
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const card = document.createElement("div");
+      card.className = "video-card";
+      card.innerHTML = `
+        <div class="video-wrapper">
+          <div class="video-loader"></div>
+          <video autoplay loop muted playsinline preload="none">
+            <source data-src="${data.videoUrl}" type="video/mp4" />
+          </video>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    lazyLoadVideos(); // Initialize lazy loading
+
+  } catch (e) {
+    console.error("Failed to load videos:", e);
+    section.style.display = "none";
+  }
+}
+
+function lazyLoadVideos() {
+  const videos = document.querySelectorAll('#videoScroll video');
+
+  const loadVideo = (video) => {
+    const source = video.querySelector('source');
+    const src = source.getAttribute('data-src');
+    if (src && !source.getAttribute('src')) {
+      source.setAttribute('src', src);
+
+      // Show loader until video is ready
+      const wrapper = video.closest(".video-wrapper");
+      const loader = wrapper.querySelector(".video-loader");
+
+      video.addEventListener('loadeddata', () => {
+        loader.style.display = "none";
+      });
+
+      video.load();
+    }
+  };
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        loadVideo(entry.target);
+        obs.unobserve(entry.target);
+      }
+    });
+  });
+
+  videos.forEach(video => observer.observe(video));
+}
+
+
+  function scrollVideos(direction) {
+    const container = document.getElementById("videoScroll");
+    container.scrollBy({
+      left: direction * 300,
+      behavior: 'smooth'
+    });
+  }
+
+
+
+
+async function loadTestimonials() {
+  try {
+    const snapshot = await db.collection("testimonials")
+      .where("approved", "==", true)
+      .orderBy("created", "desc")
+      .limit(10)
+      .get();
+
+    const wrapper = document.getElementById("testimonialWrapper");
+    wrapper.innerHTML = '';
+
+    const testimonials = [];
+    snapshot.forEach(doc => testimonials.push(doc.data()));
+
+    // Append testimonials twice for seamless marquee effect
+    for (let i = 0; i < 2; i++) {
+      testimonials.forEach(data => {
+        const card = document.createElement('div');
+        card.className = "testimonial-card";
+        card.style.minWidth = "120px"; // adjust as needed
+        //card.style.maxWidth = "250px"; // adjust as needed
+        card.style.flex = "0 0 auto";
+        card.innerHTML = `
+          <p class="comment">"${data.comment}"</p>
+          <div class="stars">${'⭐'.repeat(data.rating)}</div>
+          <div class="customer-name">– ${data.name}</div>
+        `;
+        wrapper.appendChild(card);
+      });
+    }
+  } catch (err) {
+    console.error("Failed to load testimonials:", err);
+    document.getElementById("customerTestimonials").style.display = "none";
+  }
+
+  await loadVideoScroll();
+}
+
+loadTestimonials();
+
+
+  async function loadProducts() {
+    const snapshot = await db.collection("products").orderBy("created", "desc").get();
+    allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    const categories = Array.from(new Set(allProducts.map(p => p.category))).sort();
+    categories.unshift("All");
+
+    const tabsContainer = document.getElementById("categoryTabs");
+    tabsContainer.innerHTML = "";
+    categories.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "tab-btn" + (cat === "All" ? " active" : "");
+      btn.textContent = cat;
+      btn.onclick = () => filterCategory(cat);
+      tabsContainer.appendChild(btn);
+    });
+
+    renderProducts();
+    updateCartBadge();
+  }
+
+  function filterCategory(category) {
+    selectedCategory = category;
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.classList.remove("active");
+      if (btn.textContent.toLowerCase() === category.toLowerCase()) {
+        btn.classList.add("active");
+      }
+    });
+    renderProducts();
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll(".testimonial-card");
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.style.opacity = "1";
+        card.style.transform = "scale(1)";
+      }, index * 300);
+    });
+  });
+
+
+function renderProducts() {  
+  const container = document.getElementById('productList');
+  const searchValue = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+  const inStockOnly = document.getElementById('inStockOnly')?.checked;
+  container.innerHTML = '';
+
+  const filteredProducts = allProducts.filter(p => {
+    const matchCategory = selectedCategory === 'All' || (p.category || '').toLowerCase() === selectedCategory.toLowerCase();
+    const matchSearch = (p.parentName || '').toLowerCase().includes(searchValue);
+    const hasStock = p.sizes?.some(size => size.stock > 0);
+    return matchCategory && matchSearch && (!inStockOnly || hasStock);
+  });
+
+  filteredProducts.forEach(p => {
+    const productId = p.productId;
+
+    const selectedLabel = selectedSizes[productId] || p.sizes?.[0]?.label;
+    const selectedSize = p.sizes.find(s => s.label === selectedLabel) || p.sizes?.[0] || {};
+    selectedSizes[productId] = selectedSize.label;
+
+    const ratingStars = p.rating ? '⭐'.repeat(Math.floor(p.rating)) + (p.rating % 1 >= 0.5 ? '⭐' : '') : '';
+
+    const card = document.createElement('div');
+    card.className = 'cart-product';
+
+    const cartItems = Object.entries(cart).filter(([key]) => key.startsWith(productId + '_'));
+    const totalQty = cartItems.reduce((sum, [, item]) => sum + (item.qty || 0), 0);
+
+    const sizeButtons = (p.sizes || []).map(size => `
+      <button class="segment-btn ${size.label === selectedSize.label ? 'active' : ''}"
+        onclick="selectSize('${productId}', '${size.label}')" 
+        id="btn-${productId}-${size.label}">
+        ${size.label}<br>₹${size.price}
+      </button>
+    `).join('');
+
+    const cartKey = `${productId}_${selectedSize.label}`;
+    const selectedQty = cart[cartKey]?.qty || 0;
+
+    card.innerHTML = `
+      <div style="position: relative;">
+        <img loading="lazy" src="${p.imageUrl}" alt="${p.parentName}" 
+          style="width:100%; aspect-ratio: 1 / 1;object-fit:cover;border-radius:8px;cursor:pointer" 
+          onclick="window.location.href='productdetail.html?id=${p.productId}'" />
+
+        <!-- 🛒 Cart Icon with badge -->
+        <button onclick="handleCartClick()" 
+          style="position:absolute; top:8px; right:8px; background-color:#ffffffdd; border:none; border-radius:50%; padding:8px; font-size:16px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);"
+          title="View Cart">
+          <i class="fas fa-shopping-cart"></i>
+          ${totalQty > 0 ? `<span style="
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: red;
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+          ">${totalQty}</span>` : ''}
+        </button>
+
+        <!-- 👁️ View Details Icon -->
+        <button onclick="window.location.href='productdetail.html?id=${p.productId}'" 
+          style="position:absolute; top:50px; right:8px; background-color:#ffffffdd; border:none; border-radius:50%; padding:8px; font-size:16px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" 
+          title="View Details">
+          <i class="fas fa-eye"></i>
+        </button>
+      </div>
+
+      <h3 style="font-size: 1rem;">${p.parentName}</h3>
+      <div style="color:gold;font-size:1.1rem;">${ratingStars}</div>
+
+      <div class="segment" id="sizeButtons-${productId}">${sizeButtons}</div>
+        <div class="qty-control">
+         <button onclick="updateQtyDynamic('${productId}', -1)">-</button>
+          <span id="qty-${productId}">${totalQty}</span>
+          <button id="plus-${productId}" onclick="updateQtyDynamic('${productId}', 1)" ${selectedSize.stock === 0 ? 'disabled' : ''}>+</button>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  if (filteredProducts.length === 0) {
+    container.innerHTML = `<p style="text-align:center;font-weight:bold;">No products found.</p>`;
+  }
+}
+
+
+
+
+
+
+  function selectSize(productId, sizeLabel) {
+    const product = allProducts.find(p => p.productId === productId);
+    const size = product.sizes.find(s => s.label === sizeLabel);
+    const key = `${productId}_${sizeLabel}`;
+    selectedSizes[productId] = sizeLabel;
+
+    // Highlight selected
+    product.sizes.forEach(s => {
+      const btn = document.getElementById(`btn-${productId}-${s.label}`);
+      if (btn) btn.classList.remove('active');
+    });
+    const selectedBtn = document.getElementById(`btn-${productId}-${sizeLabel}`);
+    if (selectedBtn) selectedBtn.classList.add('active');
+
+    // Update UI
+    document.getElementById(`stock-${productId}`).textContent = size.stock > 0 ? `In Stock: ${size.stock}` : 'Out of Stock';
+    document.getElementById(`stock-${productId}`).style.color = size.stock > 0 ? 'green' : 'red';
+    document.getElementById(`qty-${productId}`).innerText = cart[key]?.qty || 0;
+
+    const plusBtn = document.getElementById(`plus-${productId}`);
+    if (plusBtn) plusBtn.disabled = size.stock === 0;
+  }
+
+ function updateQtyDynamic(productId, change) {
+  const product = allProducts.find(p => p.productId === productId);
+  if (!product) return;
+
+  const selectedLabel = selectedSizes[productId] || product.sizes[0]?.label;
+  const size = product.sizes.find(s => s.label === selectedLabel);
+  if (!size) return;
+
+  const key = `${productId}_${selectedLabel}`;
+  const maxStock = size.stock ?? 0;
+  const currentQty = cart[key]?.qty || 0;
+  const newQty = currentQty + change;
+
+  // If more than 1 size exists & cart has this product in some size
+  const productCartItems = Object.keys(cart).filter(k => k.startsWith(productId + "_"));
+  if (product.sizes.length > 1 && productCartItems.length > 0 && selectedLabel !== size.label) {
+    showSizePopup(productId);
+    return;
+  }
+
+  if (newQty > maxStock) {
+    showToast(`⚠️ Only ${maxStock} in stock.`);
+    return;
+  }
+
+  if (newQty <= 0) {
+    delete cart[key];
+   if (product.sizes.length > 1){
+      let totalQty = 0;
+      for (const key in cart) {
+        if (cart[key]?.qty) totalQty += cart[key].qty;
+      }
+      if (totalQty > 0){
+         showToast("Item removed. To remove more, please change the size or product");
+      }
+    }
+  
+  } else {
+    cart[key] = {
+      qty: newQty,
+      name: product.parentName,
+      price: size.price,
+      size: size.label,
+      productId: key,
+      stock:size.stock,
+      imageUrl: product.imageUrl,
+
+    };
+  }
+
+  localStorage.setItem("cartData", JSON.stringify(cart));
+
+  const qtySpan = document.getElementById(`qty-${productId}`);
+  if (qtySpan) {
+    qtySpan.innerText = cart[key]?.qty || 0;
+  }
+  
+  renderProducts();
+  updateCartBadge();
+  renderCartDrawerItems();
+}
+
+
+
+  function updateCartBadge() {
+    let totalQty = 0;
+    for (const key in cart) {
+      if (cart[key]?.qty) totalQty += cart[key].qty;
+    }
+    document.getElementById('cartCount').innerText = totalQty;
+    document.getElementById('floatingCartCount').innerText = totalQty;
+  }
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = "toast show";
+
+  // ✅ Base64-encoded 'ping' sound (no external loading)
+  const audio = new Audio("blink.mp3"); // shortened below
+
+  audio.play().catch(e => console.warn("Toast sound couldn't play:", e));
+
+  setTimeout(() => {
+    toast.className = toast.className.replace("show", "");
+  }, 3000);
+}
+
+
+
+
+/*  function handleCartClick() {
+    const totalQty = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+    if (totalQty === 0) {
+      showToast("🛒 Your cart is empty. Please select a product.");
+    } else {
+      window.location.href = "checkout.html";
+    }
+  }
+*/
+  function redirectToCheckout() {
+    const totalQty = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+    if (totalQty === 0) {
+      showToast("🛒 Your cart is empty. Please select a product.");
+      return;
+    }
+    window.location.href = "checkout.html";
+  }
+
+  async function loadSliders() {
+    const container = document.getElementById("sliderContainer");
+    const snapshot = await db.collection("sliders").orderBy("order").get();
+    let first = true;
+
+    // Detect if user is on a mobile device
+    const isMobile = window.innerWidth <= 768;
+
+    snapshot.forEach(doc => {
+      const { imageUrl, title, subtitle, mobileUrl } = doc.data();
+      const slideDiv = document.createElement("div");
+      slideDiv.className = "slide" + (first ? " active" : "");
+      first = false;
+
+      const selectedImage = isMobile && mobileUrl ? mobileUrl : imageUrl;
+
+      slideDiv.innerHTML = `
+      <img loading="lazy" src="${selectedImage}" alt="${title}" style="object-fit:fill;" />
+      <div class="slide-text">
+        <h2>${title}</h2>
+        <p>${subtitle}</p>
+      </div>
+    `;
+      container.appendChild(slideDiv);
+    });
+
+    startSliderRotation();
+  }
+
+  function startSliderRotation() {
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+    setInterval(() => {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 5000);
+  }
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const sideBarToggle = document.getElementById('sidebar-toggle');
+
+    sidebar.style.left = (sidebar.style.left === '0px') ? '-240px' : '0px';
+  //  sideBarToggle.style.top = (sideBarToggle.style.top === '60px') ? '60px' : '11px';
+
+    if (sidebar.style.left === '0px'){
+         isSideDrawerOpen = true;
+         sideBarToggle.style.top = '11px';
+    }else{
+       isSideDrawerOpen = false;
+        sideBarToggle.style.top = '60px';
+    }
+
+  }
+
+  loadProducts();
+  loadSliders();
+
+
+  </script>
+  <script>
+    let authenticProducts = [];
+    let currentPopup = 0;
+    let popupStarted = false;
+    let popupInterval;
+
+    // 🔹 Fetch products from Firestore
+    async function loadAuthenticProducts() {
+      const snapshot = await db.collection("authenticProducts").get();
+      authenticProducts = snapshot.docs.map(doc => doc.data());
+      if (authenticProducts.length > 0) {
+        startPopupCarousel();
+      }
+    }
+
+    function showNextAuthenticPopup() {
+     // if (authenticProducts.length === 0) return;
+
+      const card = document.getElementById("popupCard");
+      const img = document.getElementById("popupImage");
+      const iframe = document.getElementById("popupVideo");
+      const title = document.getElementById("popupTitle");
+      const desc = document.getElementById("popupDesc");
+
+      const item = authenticProducts[currentPopup];
+
+      // Slide out current
+      card.classList.remove("show");
+      card.classList.add("hide");
+
+      setTimeout(() => {
+        // Clear previous
+        img.style.display = "none";
+        iframe.style.display = "none";
+
+        if (item.isVideo) {
+          iframe.src = item.video;
+          iframe.style.display = "block";
+        } else {
+          img.src = item.image;
+          iframe.src = "";
+          img.style.display = "block";
+        }
+
+        title.textContent = item.title;
+        desc.textContent = item.desc;
+
+        // Slide in new
+        card.classList.remove("hide");
+        void card.offsetWidth; // trigger reflow
+        card.classList.add("show");
+
+        currentPopup = (currentPopup + 1) % authenticProducts.length;
+      }, 400); // matches slide-out duration
+    }
+
+    function startPopupCarousel() {
+      if (!popupStarted) {
+        popupStarted = true;
+        showNextAuthenticPopup();
+        popupInterval = setInterval(showNextAuthenticPopup, 6000);
+      }
+    }
+
+    // Trigger when section scrolls into view
+    const observer = new IntersectionObserver(
+            (entries) => {
+              if (entries[0].isIntersecting) {
+                startPopupCarousel();
+              }
+            },
+            { threshold: 0.4 }
+    );
+
+    const authenticSection = document.getElementById("sliderContainer");
+    observer.observe(authenticSection);
+
+    // Load Firestore data
+    loadAuthenticProducts();
+  </script>
+
+<script>
+    let appliedDiscount = 0;
+    var isCartOpen = false;
+    var isSideDrawerOpen = false;
+
+    function toggleCartDrawer(open = true) {
+      const drawer = document.getElementById('cartDrawer');
+      drawer.classList.toggle('open', open);
+      isCartOpen = open; 
+      if (open) renderCartDrawerItems();
+    }
+
+    function renderCartDrawerItems() {
+  const container = document.getElementById("cartItemsContainer");
+  container.innerHTML = "";
+  let subtotal = 0;
+  calculateSubtotalFromCart();
+
+  const groupedByProductId = {};
+
+  for (const key in cart) {
+    const item = cart[key];
+    if (!groupedByProductId[item.productId]) {
+      groupedByProductId[item.productId] = [];
+    }
+    groupedByProductId[item.productId].push({ ...item, key });
+  }
+
+  for (const productId in groupedByProductId) {
+    const groupItems = groupedByProductId[productId];
+
+    // Show product name and "Remove All" for this product group
+   container.innerHTML += `
+  <div class="cart-group" style="margin-bottom: 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0px 0;">
+      <h4 style="margin: 0;">${groupItems[0].name}</h4>
+      <button onclick="removeAllOfProduct('${productId}')" style="color: white; background-color: green; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer;">
+        Remove
+      </button>
+    </div>
+`;
+
+    groupItems.forEach(item => {
+      subtotal += item.qty * item.price;
+      container.innerHTML += `
+        <div class="cart-item">
+          <img loading="lazy" src="${item.imageUrl}" alt="${item.name}" onclick="window.location.href='productdetail.html?id=${item.productId.split('_')[0]}'" />
+          <div class="cart-details">
+            <p>Size: ${item.size}</p>
+            <p>
+              Qty: 
+              <button onclick="updateQtyDynamic1('${item.key}', -1)">-</button>
+              ${item.qty}
+              <button onclick="updateQtyDynamic1('${item.key}', 1)">+</button>
+            </p>
+            <p>₹${item.price} x ${item.qty} = ₹${item.price * item.qty}</p>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML += `</div><hr>`;
+  }
+
+  const gst = Math.round(subtotal * 0.05);
+  const hasItems = Object.keys(cart).length > 0;
+  deliveryCharges = hasItems ? 50 : 0;
+  const total = subtotal + gst + deliveryCharges - appliedDiscount;
+
+  document.getElementById("subtotalAmt").innerText = subtotal;
+  document.getElementById("gstAmt").innerText = gst;
+  document.getElementById("deliverycharges").innerText = deliveryCharges;
+  document.getElementById("cartTotal").innerText = total >= 0 ? total : 0;
+  localStorage.setItem("cartData", JSON.stringify(cart));
+}
+
+function removeAllOfProduct(productId) {
+  for (const key in cart) {
+    if (cart[key].productId === productId) {
+      delete cart[key];
+    }
+  }
+  localStorage.setItem("cartData", JSON.stringify(cart));
+  renderCartDrawerItems();
+  renderProducts();
+  updateCartBadge();
+}
+
+
+
+
+    function updateQtyDynamic1(productId, delta) {
+      if (cart[productId]) {
+        let newQty = cart[productId].qty + delta;
+        let maxStock = cart[productId].stock;
+        if (newQty > maxStock) {
+             showToast(`⚠️ Only ${maxStock} in stock.`);
+             return;
+        }
+        cart[productId].qty += delta;
+        if (cart[productId].qty <= 0) delete cart[productId];
+        localStorage.setItem("cartData", JSON.stringify(cart));
+        renderCartDrawerItems();
+        renderProducts();
+        updateCartBadge();
+      }
+    }
+
+    function handleCartClick() {
+      const totalQty = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+      if (totalQty === 0) {
+        alert("🛒 Your cart is empty. Please select a product.");
+      } else {
+        toggleCartDrawer(true);
+      }
+    }
+  </script>
+  <style>
+    .responsive-spacer {
+  margin-top: 120px;
+}
+
+@media (max-width: 768px) {
+  .responsive-spacer {
+    margin-top: 60px;
+  }
+}
+
+  </style>
+
+ <div class="responsive-spacer"></div>
+
+ <script>
+  const validCoupons = {};
+  let appliedCoupon = '';
+  let subtotal = 0;
+  let deliveryCharges = 50;
+
+  async function loadCoupons() {
+    const snapshot = await db.collection("coupons").get();
+    let html = "<strong>Available Coupons:</strong><br>";
+
+    snapshot.forEach(doc => {
+      validCoupons[doc.id] = doc.data();
+      const { type, value, minAmount } = doc.data();
+
+      let offer = "";
+      if (type === "fixed") {
+        offer = `Flat ₹${value} OFF${minAmount ? ` on minimum purchase of ₹${minAmount}` : ""}`;
+      } else {
+        offer = `${value}% OFF${minAmount ? ` on minimum purchase of ₹${minAmount}` : ""}`;
+      }
+
+      html += `<div><strong>${doc.id}</strong> — ${offer}</div>`;
+    });
+
+    document.getElementById("availableCoupons").innerHTML = html || "No active coupons.";
+    initCouponFromStorage();
+  }
+
+  function applyCoupon() {
+    let code = document.getElementById("couponCode").value.trim();
+    code = code.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+
+    calculateSubtotalFromCart();
+
+    const feedback = document.getElementById("couponFeedback");
+
+    if (!code || !validCoupons[code]) {
+      clearStoredCoupon();
+      feedback.textContent = "Invalid coupon code.";
+      feedback.style.color = "red";
+      document.getElementById("couponRow").style.display = "none";
+      updateSummary();
+      return;
+    }
+
+    const discountInfo = validCoupons[code];
+    const minAmount = discountInfo.minAmount || 0;
+
+    if (subtotal < minAmount) {
+      clearStoredCoupon();
+      feedback.textContent = `Minimum ₹${minAmount} required.`;
+      feedback.style.color = "red";
+      document.getElementById("couponRow").style.display = "none";
+      updateSummary();
+      return;
+    }
+
+    appliedCoupon = code;
+    appliedDiscount = discountInfo.type === "fixed"
+      ? discountInfo.value
+      : Math.round(subtotal * (discountInfo.value / 100));
+
+    localStorage.setItem("appliedCoupon", code);
+    localStorage.setItem("appliedDiscount", appliedDiscount);
+
+    feedback.textContent = `Coupon "${code}" applied!`;
+    feedback.style.color = "#2c5c2e";
+    document.getElementById("couponRow").style.display = "block";
+    document.getElementById("discountAmount").innerText = appliedDiscount;
+    updateSummary();
+  }
+
+  function clearStoredCoupon() {
+    localStorage.removeItem("appliedCoupon");
+    localStorage.removeItem("appliedDiscount");
+    appliedCoupon = '';
+    appliedDiscount = 0;
+    document.getElementById("couponCode").value = '';
+    document.getElementById("couponFeedback").textContent = '';
+    document.getElementById("couponRow").style.display = "none";
+  }
+
+  function initCouponFromStorage() {
+    const storedCode = localStorage.getItem("appliedCoupon");
+    if (storedCode && validCoupons[storedCode]) {
+      const info = validCoupons[storedCode];
+      const minAmount = info.minAmount || 0;
+      if (subtotal >= minAmount) {
+        appliedCoupon = storedCode;
+        appliedDiscount = info.type === "fixed"
+          ? info.value
+          : Math.round(subtotal * (info.value / 100));
+
+        document.getElementById("couponCode").value = storedCode;
+        document.getElementById("couponFeedback").textContent = `Coupon "${storedCode}" applied!`;
+        document.getElementById("couponFeedback").style.color = "#2c5c2e";
+        document.getElementById("couponRow").style.display = "block";
+        document.getElementById("discountAmount").innerText = appliedDiscount;
+      } else {
+        clearStoredCoupon();
+      }
+    } else {
+      clearStoredCoupon();
+    }
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const hasItems = Object.keys(cart).length > 0;
+    deliveryCharges = hasItems ? 50 : 0;
+
+    const gst = Math.round(subtotal * 0.05);
+    const total = subtotal + gst + deliveryCharges - appliedDiscount;
+
+    document.getElementById("subtotalAmt").innerText = subtotal;
+    document.getElementById("gstAmt").innerText = gst;
+    document.getElementById("deliverycharges").innerText =  deliveryCharges;
+    document.getElementById("cartTotal").innerText = total >= 0 ? total : 0;
+  }
+
+  function calculateSubtotalFromCart() {
+    const cart = JSON.parse(localStorage.getItem("cartData") || "{}");
+    let total = 0;
+    for (let key in cart) {
+      const item = cart[key];
+      total += item.qty * item.price;
+    }
+    subtotal = total;
+    updateSummary();
+  }
+
+  window.addEventListener("DOMContentLoaded", async () => {
+    calculateSubtotalFromCart();
+    await loadCoupons();
+  });
+
+</script>
+
+
+
+</body>
+
+<footer style="text-align: center; padding: 20px; font-size: 0.9rem; color: #666;">
+  <p>
+    © 2025 Grovikto All rights reserved <br>
+    <a href="privacy.html" style="color: #007B55; text-decoration: underline; text-align: center;">Privacy Policy</a>
+
+  </p>
+</footer>
+
+</html>

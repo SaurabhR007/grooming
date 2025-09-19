@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdantra Order Status</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #2e8b57;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 1rem 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+        .sidebar-toggle {
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 1rem;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1001;
+      background: #2c5c2e;
+      color: white;
+      border-radius: 6px;
+    }
+      .toast {
+  visibility: hidden;
+  min-width: 280px;
+  background-color: #2c5c2e;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px 20px;
+  position: fixed;
+  z-index: 1001;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.toast.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -240px;
+      width: 220px;
+      height: 100%;
+      background-color: #a4a3a3;
+      color: white;
+      padding-top: 4rem;
+      transition: 0.3s ease-in-out;
+      z-index: 1000;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    }
+    .sidebar a {
+      display: block;
+      color: white;
+      padding: 14px 18px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .sidebar a:hover {
+      background-color: #2e8b57;
+    }
+    .order-card {
+      background: white;
+      border-left: 5px solid #ccc;
+      padding: 1rem;
+      border-radius: 10px;
+      margin: 1rem 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .pending { border-left-color: orange; }
+    .preparing { border-left-color: #2196f3; }
+    .out_for_delivery { border-left-color: #ff9800; }
+    .delivered { border-left-color: #4caf50; }
+  </style>
+</head>
+<body>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+  <div class="sidebar" id="sidebar">
+    <a href="index.html">Home</a>
+    <a onclick="handleCartClick()">Checkout</a>
+    <a href="customerorder.html">Track Order</a>
+    <a href="adminlogin.html">Employee</a>
+  </div>
+
+
+  <h2>📦 Track Your Order</h2>
+  <input type="text" id="orderIdInput" placeholder="Enter your Order ID (e.g., VDTR-...)" value="VDTR-"/>
+  <button onclick="fetchOrderById()">Search</button>
+
+  <div id="results"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script>
+    function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.className = "toast show";
+    setTimeout(() => {
+      toast.className = toast.className.replace("show", "");
+    }, 3000);
+  }
+     function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.style.left = (sidebar.style.left === '0px') ? '-240px' : '0px';
+    }
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+      authDomain: "verdantra-grows.firebaseapp.com",
+      projectId: "verdantra-grows",
+      storageBucket: "verdantra-grows.appspot.com",
+      messagingSenderId: "642225222429",
+      appId: "1:642225222429:web:b32000eda4a1195a45a7f4",
+      measurementId: "G-RPYGL2665R"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function fetchOrderById() {
+      const orderId = document.getElementById("orderIdInput").value.trim();
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = '';
+
+      if (!orderId.startsWith("VDTR-")) {
+        resultsDiv.innerHTML = '<p>Please enter a valid Order ID (e.g., VDTR-...)</p>';
+        return;
+      }
+
+      try {
+        const querySnapshot = await db.collection("orders").where("orderId", "==", orderId).get();
+        if (querySnapshot.empty) {
+          resultsDiv.innerHTML = '<p>No order found for this Order ID.</p>';
+          return;
+        }
+
+        querySnapshot.forEach(doc => {
+          const o = doc.data();
+          const card = document.createElement("div");
+          const status = (o.status || 'pending').replace(/ /g, '_');
+          card.className = `order-card ${status}`;
+          card.innerHTML = `
+            <div><strong>Order ID:</strong> ${o.orderId}</div>
+            <div><strong>Status:</strong> ${(o.status || 'pending').replace(/_/g, ' ').toUpperCase()}</div>
+            <div><strong>Total:</strong> ₹${o.total}</div>
+            <div><strong>Items:</strong><br>${(o.items || []).map(i => `- ${i}`).join('<br>')}</div>
+            <div><strong>Date:</strong> ${o.created?.toDate ? o.created.toDate().toLocaleString() : '-'}</div>
+          `;
+          resultsDiv.appendChild(card);
+        });
+      } catch (err) {
+        resultsDiv.innerHTML = '<p>Error fetching order. Please try again later.</p>';
+        console.error(err);
+      }
+    }
+  </script>
+   <script>
+    function handleCartClick() {
+      const cartData = JSON.parse(localStorage.getItem("cartData") || '{}');
+      const totalQty = Object.values(cartData).reduce((sum, item) => sum + item.qty, 0);
+
+      if (totalQty === 0) {
+        showToast("🛒 Your cart is empty. Please select a product.");
+      } else {
+        window.location.href = "checkout.html";
+      }
+    }
+    </script>
+  <script>
+  // Parse URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const orderId = urlParams.get('orderId');
+
+  // Put it in the input box if it exists
+  if (orderId) {
+    document.getElementById('orderIdInput').value = orderId;
+  }
+</script>
+<div id="toast" class="toast">Your cart is empty. Please select a product.</div>
+
+</body>
+</html>

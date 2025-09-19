@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Manage Offers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; padding:20px; }
+    .offer-list { margin-top:20px; }
+    .offer-item { padding:10px; border:1px solid #ccc; margin-bottom:10px; display:flex; justify-content:space-between; }
+  </style>
+</head>
+<body>
+<h2>🎉 Manage Offers</h2>
+<input type="text" id="offerText" placeholder="Enter new offer" style="width:70%;">
+<button onclick="addOffer()">Add Offer</button>
+
+<div class="offer-list" id="offersList"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+    authDomain: "verdantra-grows.firebaseapp.com",
+    projectId: "verdantra-grows",
+    storageBucket: "verdantra-grows.appspot.com",
+    messagingSenderId: "642225222429",
+    appId: "1:642225222429:web:b32000eda4a1195a45a7f4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  async function loadOffers() {
+    const querySnapshot = await getDocs(collection(db, "offers"));
+    let offersList = document.getElementById("offersList");
+    offersList.innerHTML = "";
+
+    querySnapshot.forEach((docSnap) => {
+      let data = docSnap.data();
+      let div = document.createElement("div");
+      div.className = "offer-item";
+      div.innerHTML = `
+          <span>${data.text}</span>
+          <button onclick="deleteOffer('${docSnap.id}')">❌ Delete</button>
+        `;
+      offersList.appendChild(div);
+    });
+  }
+
+  window.addOffer = async function () {
+    let offerText = document.getElementById("offerText").value;
+    if (!offerText.trim()) return alert("Enter offer text!");
+    await addDoc(collection(db, "offers"), { text: offerText });
+    document.getElementById("offerText").value = "";
+    loadOffers();
+  }
+
+  window.deleteOffer = async function (id) {
+    await deleteDoc(doc(db, "offers", id));
+    loadOffers();
+  }
+
+  loadOffers();
+</script>
+</body>
+</html>

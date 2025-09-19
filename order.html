@@ -1,0 +1,348 @@
+<!-- File: verdantra_orders_admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verdantra Orders Admin</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+  <div class="sidebar" id="sidebar">
+  <a href="index.html">Home</a>
+  </div>
+  <script>
+    function toggleSidebar() {
+       const sidebar = document.getElementById('sidebar');
+       if (sidebar.style.left === '0px') {
+         sidebar.style.left = '-240px';
+       } else {
+         sidebar.style.left = '0px';
+       }
+    }
+
+  </script>
+  <style>
+    .header-tabs a.active {
+      background-color: #2c5c2e;
+      color: white;
+    }
+        .sidebar-toggle {
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 1rem;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1001;
+  background: #2c5c2e;
+  color: white;
+  border-radius: 6px;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -240px;
+  width: 220px;
+  height: 100%;
+  background-color: #1e3d2f;
+  color: white;
+  padding-top: 4rem;
+  transition: 0.3s ease-in-out;
+  z-index: 1000;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 14px 18px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.sidebar a:hover {
+  background-color: #2c5c2e;
+}
+.header-tabs {
+  background-color: #f2f2f2;
+  padding: 10px 0;
+  box-shadow: inset 0 -1px 0 #ddd;
+}
+
+.header-tabs ul {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.header-tabs li a {
+  padding: 10px 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #2c5c2e;
+  border-bottom: 3px solid transparent;
+  transition: 0.3s ease;
+}
+
+.header-tabs li a:hover {
+  border-bottom: 3px solid #2c5c2e;
+}
+
+.header-tabs li a.active {
+  color: #1e3d2f;
+  border-bottom: 3px solid #1e3d2f;
+  font-weight: 700;
+}
+
+  </style>
+<nav class="header-tabs">
+  <ul>
+    <li><a href="admin.html" data-page="admin.html">Admin Panel</a></li>
+    <li><a href="slider.html" data-page="slider.html">Sliders</a></li>
+    <li><a href="order.html" data-page="order.html">Orders</a></li>
+    <li><a href="orderhistory.html" data-page="orderhistory.html">Order History</a></li>
+  </ul>
+</nav>
+
+  <script>
+  const currentPage = window.location.pathname.split("/").pop();
+  const tabLinks = document.querySelectorAll(".header-tabs a");
+
+  tabLinks.forEach(link => {
+    if (link.dataset.page === currentPage) {
+      link.classList.add("active");
+    }
+  });
+</script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+    }
+    h2 {
+      color: #2c5c2e;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .tabs button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #ddd;
+    }
+    .tabs button.active {
+      background: #2c5c2e;
+      color: white;
+    }
+    .order-card {
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .status-pending { border-left: 5px solid orange; }
+    .status-preparing { border-left: 5px solid #2196f3; }
+    .status-out { border-left: 5px solid #ff9800; }
+    .status-delivered { border-left: 5px solid #4caf50; background: #e8f5e9; }
+
+    .status-btn {
+      background: #2c5c2e;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      cursor: pointer;
+    }
+
+    .export-buttons {
+      margin-bottom: 1rem;
+    }
+
+    .export-buttons button, #searchInput {
+      padding: 8px 14px;
+      background: #2c5c2e;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .badge {
+      background: #333;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      margin-left: 4px;
+    }
+
+    #searchInput {
+      width: 200px;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📦 Verdantra Orders</h2>
+
+  <div class="export-buttons">
+    <button onclick="exportToCSV()">Export to CSV</button>
+    <button onclick="exportToPDF()">Export to PDF</button>
+    <input type="text" id="searchInput" placeholder="Search name/order ID" oninput="applyFilters()">
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="orderList"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+      authDomain: "verdantra-grows.firebaseapp.com",
+      projectId: "verdantra-grows",
+      storageBucket: "verdantra-grows.firebasestorage.app",
+      messagingSenderId: "642225222429",
+      appId: "1:642225222429:web:b32000eda4a1195a45a7f4",
+      measurementId: "G-RPYGL2665R"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const orderList = document.getElementById('orderList');
+    const tabContainer = document.getElementById('tabs');
+    const searchInput = document.getElementById('searchInput');
+    let allOrders = [], currentFilter = 'all';
+
+    const statusLabels = {
+      all: 'All',
+      pending: '⏳ Pending',
+      preparing: '👨‍🍳 Preparing',
+      out_for_delivery: '🚚 Out for Delivery',
+      delivered: '✅ Delivered'
+    };
+    const statusClasses = {
+      pending: 'status-pending',
+      preparing: 'status-preparing',
+      out_for_delivery: 'status-out',
+      delivered: 'status-delivered'
+    };
+
+    async function loadOrders() {
+      const snapshot = await db.collection("orders").orderBy("created", "desc").get();
+      allOrders = [];
+      snapshot.forEach(doc => allOrders.push({ id: doc.id, ...doc.data() }));
+      renderTabs();
+      applyFilters();
+    }
+
+    function renderTabs() {
+      const counts = { all: allOrders.length, pending: 0, preparing: 0, out_for_delivery: 0, delivered: 0 };
+      allOrders.forEach(o => counts[o.status || 'pending']++);
+      tabContainer.innerHTML = '';
+      Object.keys(statusLabels).forEach(status => {
+        const btn = document.createElement('button');
+        btn.innerHTML = `${statusLabels[status]} <span class="badge">${counts[status]}</span>`;
+        btn.onclick = () => { currentFilter = status; applyFilters(); };
+        btn.className = (status === currentFilter) ? 'active' : '';
+        tabContainer.appendChild(btn);
+      });
+    }
+
+    function applyFilters() {
+      const q = searchInput.value.toLowerCase();
+      const filtered = allOrders.filter(o => {
+        const statusMatch = currentFilter === 'all' || (o.status || 'pending') === currentFilter;
+        const searchMatch = o.name?.toLowerCase().includes(q) || o.orderId?.toLowerCase().includes(q);
+        return statusMatch && searchMatch;
+      });
+      orderList.innerHTML = '';
+      filtered.forEach(o => renderOrder(o));
+    }
+
+    function renderOrder(order) {
+      const div = document.createElement('div');
+      const status = order.status || 'pending';
+      div.className = `order-card ${statusClasses[status]}`;
+      div.innerHTML = `
+        <div><strong>🆔 Order ID:</strong> ${order.orderId}</div>
+        <div><strong>Customer:</strong> ${order.name} | 📞 ${order.phone}</div>
+        <div><strong>Address:</strong> ${order.address}</div>
+        <div><strong>Email:</strong> ${order.email || '-'}</div>
+        <div><strong>Total:</strong> ₹${order.total}</div>
+        <div><strong>Items:</strong><br>${order.items.map(i => `- ${i}`).join('<br>')}</div>
+        <div><strong>Status:</strong> ${statusLabels[status]}</div>
+        ${getNextStatusButton(order.id, status)}
+      `;
+      orderList.appendChild(div);
+    }
+
+    function getNextStatusButton(id, currentStatus) {
+      const flow = {
+        pending: 'preparing',
+        preparing: 'out_for_delivery',
+        out_for_delivery: 'delivered',
+        delivered: null
+      };
+      const next = flow[currentStatus];
+      if (!next) return '';
+      return `<button class="status-btn" onclick="updateStatus('${id}', '${next}')">Mark as ${statusLabels[next]}</button>`;
+    }
+
+    async function updateStatus(id, newStatus) {
+      await db.collection("orders").doc(id).update({ status: newStatus });
+      loadOrders();
+    }
+
+    function exportToCSV() {
+      const rows = [['Order ID', 'Name', 'Phone', 'Email', 'Address', 'Total', 'Status', 'Items']];
+      allOrders.forEach(o => {
+        rows.push([o.orderId, o.name, o.phone, o.email || '', o.address, o.total, o.status || 'pending', o.items.join('; ')]);
+      });
+      const csv = rows.map(r => r.map(f => `"${f}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'verdantra_orders.csv';
+      a.click();
+    }
+
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      let y = 10;
+      allOrders.forEach((o, i) => {
+        pdf.setFontSize(10);
+        pdf.text(`Order ${i + 1} - ${o.orderId}`, 10, y); y += 5;
+        pdf.text(`Name: ${o.name} | Phone: ${o.phone}`, 10, y); y += 5;
+        pdf.text(`Address: ${o.address}`, 10, y); y += 5;
+        pdf.text(`Email: ${o.email || '-'}`, 10, y); y += 5;
+        pdf.text(`Total: ₹${o.total} | Status: ${o.status}`, 10, y); y += 5;
+        pdf.text(`Items: ${o.items.join(', ')}`, 10, y); y += 10;
+        if (y > 270) { pdf.addPage(); y = 10; }
+      });
+      pdf.save('verdantra_orders.pdf');
+    }
+
+    loadOrders();
+  </script>
+
+</body>
+</html>

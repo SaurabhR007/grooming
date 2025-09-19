@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Detail - Verdantra Grows</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 1rem; background: #fff; color: #2e2e2e; }
+    .container { max-width: 800px; margin: auto; }
+    h1 { color: #2e8b57; }
+    .images { display: flex; overflow-x: auto; gap: 1rem; margin-bottom: 1rem; }
+    .images img { height: 200px; border-radius: 8px; object-fit: cover; }
+    .description, .video { margin: 1rem 0; }
+    .back-btn { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #2c5c2e; font-weight: bold; }
+
+    .size-options {
+      margin: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .size-options button {
+      padding: 8px 16px;
+      border: 2px solid #595454;
+      border-radius: 5px;
+      background:white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .size-options .active {
+      background: #595454;
+      color: white;
+    }
+
+    .rating {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .rating-text {
+      flex-grow: 1;
+    }
+
+    .rating span {
+      color: gold;
+      font-size: 1.2rem;
+    }
+
+    .rating-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .rating-actions button {
+      padding: 6px 12px;
+      background: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .buy-btn {
+      background-color: #2e8b57;
+    }
+
+    iframe { width: 100%; border-radius: 12px; }
+
+    #toast {
+      visibility: hidden;
+      background-color: #2c5c2e;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      font-weight: bold;
+    }
+
+    #toast.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+    #sizeSummary {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #2c5c2e;
+    }
+    .benefits-section {
+  background: #eafbee;
+  border-left: 5px solid #2e8b57;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+}
+
+.benefits-section h3 {
+  color: #2e8b57;
+  margin-bottom: 0.5rem;
+}
+
+.benefits-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.benefits-section li {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+@media (max-width: 600px) {
+  .benefits-section {
+    padding: 0.75rem;
+  }
+
+  .benefits-section li {
+    font-size: 0.95rem;
+  }
+}
+
+
+    @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+    @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-btn">← Back to Products</a>
+    <h1 id="productName"></h1>
+    <div class="images" id="imageGallery"></div>
+
+    <div id="sizeSelection" class="size-options"></div>
+    <div id="sizeSummary"></div>
+
+    <div class="rating" id="productRating">
+      <div class="rating-text" id="ratingStars"></div>
+      <div class="rating-actions">
+        <button onclick="updateQty(-1)">-</button>
+        <span id="qty">0</span>
+        <button onclick="updateQty(1)">+</button>
+        <button onclick="buyNow()" class="buy-btn">Buy Now</button>
+      </div>
+    </div>
+
+    <div class="description" id="productDescription"></div>
+    <div id="productBenefits" class="benefits-section" style="display:none;"></div>
+    <div class="video" id="productVideo"></div>
+    <div class="reviews-section">
+  <h3>Customer Reviews</h3>
+  <div id="productReviews"></div>
+
+ <h4>Leave a Review</h4>
+<form onsubmit="submitProductReview(event)" class="review-form">
+  <input type="text" id="reviewerName" placeholder="Your Name" required />
+  <input type="tel" id="reviewerPhone" placeholder="Mobile Number" required pattern="[0-9]{10}" />
+  
+  <select id="reviewRating" required>
+    <option value="">Select Rating</option>
+    <option value="5">⭐⭐⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="1">⭐</option>
+  </select>
+  
+  <textarea id="reviewComment" placeholder="Your Review" required></textarea>
+  <button type="submit">Submit Review</button>
+</form>
+
+  </div>
+
+  <a href="checkout.html" style="position: fixed; top: 20px; right: 20px; background: #2e8b57; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+    🛒 Cart (<span id="cartCount">0</span>)
+  </a>
+
+  <div id="toast">Cart updated!</div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+      authDomain: "verdantra-grows.firebaseapp.com",
+      projectId: "verdantra-grows",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const params = new URLSearchParams(location.search);
+    const productId = params.get('id');
+    let product = null;
+    let cart = JSON.parse(localStorage.getItem("cartData") || '{}');
+    let selectedSizeObj = null;
+    let cartKey = '';
+
+    async function loadProduct() {
+      if (!productId) return;
+      const doc = await db.collection('products').doc(productId).get();
+      if (!doc.exists) return;
+
+      product = doc.data();
+      document.getElementById("productName").textContent = product.parentName || product.name;
+      document.getElementById("productDescription").innerHTML = product.desc || "No description available.";
+
+      const gallery = document.getElementById("imageGallery");
+      (product.imageUrls?.length ? product.imageUrls : [product.imageUrl]).forEach(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        gallery.appendChild(img);
+      });
+
+      if (product.rating) {
+        const stars = "★".repeat(Math.floor(product.rating)) + "☆".repeat(5 - Math.floor(product.rating));
+        document.getElementById("ratingStars").innerHTML = `<strong>Rating:</strong> <span>${stars}</span> (${product.rating.toFixed(1)}/5)`;
+      }
+
+      if (product.videoUrl) {
+        document.getElementById("productVideo").innerHTML = `<iframe height="315" src="${product.videoUrl}" frameborder="0" allowfullscreen></iframe>`;
+      }
+
+            // Render benefits
+      if (product.benefits && product.benefits.length) {
+        const benefitsHTML = `
+          <h3>Benefits</h3>
+          <ul>
+            ${product.benefits.map(b => `<li>✅ ${b}</li>`).join('')}
+          </ul>
+        `;
+        const benefitsDiv = document.getElementById("productBenefits");
+        benefitsDiv.innerHTML = benefitsHTML;
+        benefitsDiv.style.display = "block";
+      }
+
+      renderSizeOptions(product.sizes || []);
+      updateCartCount();
+      document.getElementById("qty").textContent = getTotalCountOfProduct(product.parentName || product.name);
+      updateSizeSummary();
+    }
+
+    function renderSizeOptions(sizes) {
+      const container = document.getElementById("sizeSelection");
+      container.innerHTML = "";
+      sizes.forEach((size, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = `${size.label} - ₹${size.price}`;
+        btn.onclick = () => selectSize(size, btn);
+        if (index === 0) selectSize(size, btn); // auto-select first
+        container.appendChild(btn);
+      });
+    }
+
+    function selectSize(size, button) {
+      selectedSizeObj = size;
+      cartKey = `${productId}_${size.label}`;
+
+      document.querySelectorAll(".size-options button").forEach(b => b.classList.remove("active"));
+      button.classList.add("active");
+
+      // Show total count across all sizes
+      document.getElementById("qty").textContent = getTotalCountOfProduct(product.parentName || product.name);
+
+      updateSizeSummary();
+    }
+
+
+    function updateQty(change) {
+      if (!cartKey || !selectedSizeObj) return;
+
+      const maxStock = selectedSizeObj.stock ?? 1;
+      const currentQty = cart[cartKey]?.qty || 0;
+      const newQty = currentQty + change;
+
+      if (newQty > maxStock) return showToast(`⚠️ Only ${maxStock} in stock.`);
+      if (newQty <= 0) delete cart[cartKey];
+      else {
+        cart[cartKey] = {
+          qty: newQty,
+          name: product.parentName || product.name,
+          price: selectedSizeObj.price,
+          size: selectedSizeObj.label,
+          productId: cartKey,
+          imageUrl: product.imageUrl || ''
+        };
+      }
+
+      // ✅ Set qty display to total product count across sizes
+      document.getElementById("qty").textContent = getTotalCountOfProduct(product.parentName || product.name);
+
+      localStorage.setItem("cartData", JSON.stringify(cart));
+      updateCartCount();
+      updateSizeSummary();
+      showToast("Cart updated!");
+    }
+
+
+
+    function updateCartCount() {
+      const total = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById("cartCount").textContent = total;
+    }
+
+    function getTotalCountOfProduct(parentName) {
+      let total = 0;
+      for (const key in cart) {
+        if (cart[key].name === parentName) {
+          total += cart[key].qty;
+        }
+      }
+      return total;
+    }
+
+
+    function updateSizeSummary() {
+      const productCartItems = Object.entries(cart).filter(([key, item]) =>
+        key.startsWith(productId + '_')
+      );
+      const summary = productCartItems.map(([_, item]) => `${item.size}: ${item.qty}`).join(' | ');
+      document.getElementById("sizeSummary").textContent = summary ? `Added to Cart → ${summary}` : '';
+    }
+
+    function buyNow() {
+      if (!cartKey || !product || !selectedSizeObj) return;
+      if (!cart[cartKey]) updateQty(1);
+      window.location.href = "checkout.html";
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.className = "show";
+      setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    loadProduct();
+    loadProductReviews();
+
+  async function loadProductReviews() {
+  const container = document.getElementById("productReviews");
+  container.innerHTML = "Loading reviews...";
+
+  const snapshot = await db.collection("products")
+    .doc(productId)
+    .collection("reviews")
+    .where("approved", "==", true)
+    .orderBy("created", "desc")
+    .get();
+
+  if (snapshot.empty) {
+    container.innerHTML = "<p>No reviews yet.</p>";
+    return;
+  }
+
+  let totalRating = 0;
+  let reviewCount = 0;
+  let html = '';
+
+  snapshot.forEach(doc => {
+    const review = doc.data();
+    const safeRating = Math.min(Math.max(parseInt(review.rating), 1), 5); // clamp 1–5
+    totalRating += safeRating;
+    reviewCount++;
+
+    const stars = "★".repeat(safeRating) + "☆".repeat(5 - safeRating);
+    html += `
+      <div style="border-bottom: 1px solid #ccc; padding: 10px 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong>${review.name}</strong>
+          <span style="color: gold;">${stars}</span>
+        </div>
+        <p style="margin: 5px 0;">${review.comment}</p>
+      </div>
+    `;
+  });
+
+  const avgRating = (totalRating / reviewCount).toFixed(1);
+
+  // ✅ Update product document's average rating and review count
+  await db.collection("products").doc(productId).update({
+    rating: parseFloat(avgRating),
+    reviewCount
+  });
+
+  container.innerHTML = html;
+
+  // ✅ Also update the main product rating display
+  if (document.getElementById("ratingStars")) {
+    document.getElementById("ratingStars").innerHTML = `
+      <strong>Rating:</strong> 
+      <span>${"★".repeat(Math.floor(avgRating)) + "☆".repeat(5 - Math.floor(avgRating))}</span> 
+      (${avgRating}/5) `;
+  }
+}
+
+  </script>
+
+<style>
+  .reviews-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 12px;
+  }
+
+  .reviews-section h3,
+  .reviews-section h4 {
+    margin-bottom: 1rem;
+    color: #2e8b57;
+  }
+
+  #productReviews .review-card {
+    border-bottom: 1px solid #ddd;
+    padding: 1rem 0;
+  }
+
+  .review-card strong {
+    font-size: 1rem;
+    color: #333;
+  }
+
+  .review-card span {
+    color: #f5a623;
+    font-size: 1.1rem;
+  }
+
+  .review-card p {
+    margin-top: 0.5rem;
+    color: #555;
+  }
+
+  .review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .review-form input,
+  .review-form select,
+  .review-form textarea {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 70%;
+  }
+
+  .review-form textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .review-form button {
+    background-color: #2e8b57;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  @media (max-width: 600px) {
+    .review-form input,
+    .review-form select,
+    .review-form textarea,
+    .review-form button {
+      font-size: 0.95rem;
+    }
+  }
+</style>
+
+
+
+<script>
+
+async function submitProductReview(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("reviewerName").value.trim();
+  const phone = document.getElementById("reviewerPhone").value.trim();
+  const rating = parseInt(document.getElementById("reviewRating").value);
+  const comment = document.getElementById("reviewComment").value.trim();
+
+  if (!productId || !name || !rating || !comment || !phone) return;
+
+  await db.collection("products")
+    .doc(productId)
+    .collection("reviews")
+    .add({
+      name,
+      phone,
+      rating,
+      comment,
+      approved: false,
+      created: firebase.firestore.Timestamp.now()
+    });
+
+  e.target.reset();
+  alert("Thank you! Your review has been submitted for approval.");
+}
+</script>
+</body>
+</html>

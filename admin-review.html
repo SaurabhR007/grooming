@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Review Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+      background: #f7f7f7;
+    }
+
+    h2, h3 {
+      color: #2c5c2e;
+      margin-bottom: 1rem;
+    }
+
+    .review {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .stars {
+      color: #FFA500;
+      font-size: 1.1rem;
+      word-break: break-word;
+    }
+
+    button {
+      margin-right: 10px;
+      background: #2c5c2e;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1e4020;
+    }
+
+    .review-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .review-flex img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .review-info {
+      flex-grow: 1;
+      min-width: 200px;
+    }
+
+    @media (max-width: 500px) {
+      .stars {
+        font-size: 1.2rem;
+      }
+
+      .review-info p {
+        font-size: 0.95rem;
+      }
+
+      button {
+        margin-top: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Pending Reviews</h2>
+  <div id="reviewList">Loading...</div>
+
+  <div id="pendingReviews"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+      authDomain: "verdantra-grows.firebaseapp.com",
+      projectId: "verdantra-grows",
+      storageBucket: "verdantra-grows.appspot.com",
+      messagingSenderId: "642225222429",
+      appId: "1:642225222429:web:b32000eda4a1195a45a7f4"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function loadPendingReviews() {
+      const snapshot = await db.collection("testimonials")
+        .where("approved", "==", false)
+        .get();
+
+      const container = document.getElementById("reviewList");
+      container.innerHTML = "";
+
+      if (snapshot.empty) {
+        container.innerHTML = "No pending reviews.";
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const div = document.createElement("div");
+        div.className = "review";
+        div.innerHTML = `
+          <p><strong>${data.name}</strong><br>
+          <span class="stars">${'⭐'.repeat(data.rating)}</span></p>
+          <p>${data.comment}</p>
+          <button onclick="approveReview('${doc.id}')">Approve</button>
+          <button onclick="deleteReview('${doc.id}')">Delete</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function approveReview(id) {
+      await db.collection("testimonials").doc(id).update({ approved: true });
+      alert("Approved!");
+      loadPendingReviews();
+    }
+
+    async function deleteReview(id) {
+      if (confirm("Are you sure you want to delete this review?")) {
+        await db.collection("testimonials").doc(id).delete();
+        alert("Deleted!");
+        loadPendingReviews();
+      }
+    }
+
+    async function loadPendingReviews2() {
+      const snapshot = await db.collectionGroup("reviews")
+        .where("approved", "==", false).get();
+
+      const container = document.getElementById("pendingReviews");
+      container.innerHTML = "<h3>Product Reviews</h3>";
+
+      if (snapshot.empty) {
+        container.innerHTML += "<p>No pending product reviews.</p>";
+        return;
+      }
+
+      for (const doc of snapshot.docs) {
+        const data = doc.data();
+        const pathSegments = doc.ref.path.split("/");
+        const productId = pathSegments[1];
+
+        let productImage = "";
+        let parentName = productId;
+        try {
+          const productDoc = await db.collection("products").doc(productId).get();
+          if (productDoc.exists) {
+            const productData = productDoc.data();
+            productImage = productData.imageUrl || "";
+            parentName = productData.parentName || productId;
+          }
+        } catch (err) {
+          console.error("Error fetching product for review:", err);
+        }
+
+        const reviewDiv = document.createElement("div");
+        reviewDiv.className = "review";
+        reviewDiv.innerHTML = `
+          <div class="review-flex">
+            <img src="${productImage}" alt="Product Image">
+            <div class="review-info">
+              <p><strong>${data.name}</strong> (${data.phone})<br>
+              <strong>Product:</strong> ${parentName}<br>
+              <strong>Rating:</strong> <span class="stars">${'⭐'.repeat(data.rating)}</span><br>
+              <strong>Comment:</strong> ${data.comment}</p>
+              <button onclick="approveReview2('${doc.ref.path}')">Approve</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(reviewDiv);
+      }
+    }
+
+    async function approveReview2(path) {
+      await db.doc(path).update({ approved: true });
+      alert("Review approved.");
+      loadPendingReviews2();
+    }
+
+    loadPendingReviews();
+    loadPendingReviews2();
+  </script>
+</body>
+</html>

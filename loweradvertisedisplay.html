@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Authentic Products Admin</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    h1 { color: #333; }
+    form { background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,.1); }
+    input, textarea, select { width: 100%; padding: 8px; margin: 6px 0; border: 1px solid #ccc; border-radius: 5px; }
+    button { padding: 10px 15px; background: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #218838; }
+    .card { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,.1); }
+    .card img, .card iframe { max-width: 100%; border-radius: 5px; margin-bottom: 10px; }
+    .actions { margin-top: 10px; }
+    .actions button { margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h1>Authentic Products Admin</h1>
+
+<form id="productForm">
+  <label>Type</label>
+  <select id="isVideo">
+    <option value="false">Image</option>
+    <option value="true">Video</option>
+  </select>
+
+  <label>Image URL (if Image)</label>
+  <input type="text" id="imageUrl" placeholder="https://..." />
+
+  <label>Video URL (if Video - embed link)</label>
+  <input type="text" id="videoUrl" placeholder="https://youtube.com/embed/..." />
+
+  <label>Title</label>
+  <input type="text" id="title" placeholder="Enter title" required />
+
+  <label>Description</label>
+  <textarea id="desc" placeholder="Enter description" required></textarea>
+
+  <button type="submit">Add Product</button>
+</form>
+
+<h2>All Popups</h2>
+<div id="productList"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, getDocs, deleteDoc, doc
+  } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
+
+  // ✅ Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+    authDomain: "verdantra-grows.firebaseapp.com",
+    projectId: "verdantra-grows",
+    storageBucket: "verdantra-grows.appspot.com",
+    messagingSenderId: "642225222429",
+    appId: "1:642225222429:web:b32000eda4a1195a45a7f4"
+  };
+
+  // ✅ Init Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const form = document.getElementById("productForm");
+  const productList = document.getElementById("productList");
+
+  // Add new popup item
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const isVideo = document.getElementById("isVideo").value === "true";
+
+    const data = {
+      title: document.getElementById("title").value,
+      desc: document.getElementById("desc").value,
+      isVideo: isVideo,
+      image: isVideo ? "" : document.getElementById("imageUrl").value,
+      video: isVideo ? document.getElementById("videoUrl").value : ""
+    };
+
+    await addDoc(collection(db, "authenticProducts"), data);
+    form.reset();
+    loadProducts();
+  });
+
+  // Load products
+  async function loadProducts() {
+    productList.innerHTML = "";
+    const snapshot = await getDocs(collection(db, "authenticProducts"));
+    snapshot.forEach((docSnap) => {
+      const item = docSnap.data();
+      const div = document.createElement("div");
+      div.classList.add("card");
+
+      if (item.isVideo) {
+        div.innerHTML = `<iframe src="${item.video}" frameborder="0"></iframe>`;
+      } else {
+        div.innerHTML = `<img src="${item.image}" alt="img" />`;
+      }
+
+      div.innerHTML += `
+        <h3>${item.title}</h3>
+        <p>${item.desc}</p>
+        <div class="actions">
+          <button onclick="deleteProduct('${docSnap.id}')">Delete</button>
+        </div>
+      `;
+      productList.appendChild(div);
+    });
+  }
+
+  // Delete product
+  window.deleteProduct = async function (id) {
+    await deleteDoc(doc(db, "authenticProducts", id));
+    loadProducts();
+  }
+
+  loadProducts();
+</script>
+</body>
+</html>

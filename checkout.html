@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout - Grovikta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2e8b57;
+      --accent: #e8f5e9;
+      --danger: #c62828;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    .sidebar-toggle {
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 1rem;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1001;
+      background: var(--primary);
+      color: white;
+      border-radius: 6px;
+      border: none;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -240px;
+      width: 220px;
+      height: 100%;
+      background-color: #949191;
+      color: white;
+      padding-top: 4rem;
+      transition: 0.3s ease-in-out;
+      z-index: 1000;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      padding: 14px 18px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .sidebar a:hover {
+      background-color: var(--primary);
+    }
+
+    .card {
+      background: white;
+      max-width: 700px;
+      margin: auto;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3 {
+      color:#595454;
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .btn {
+      background:#2c5c2e;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .btn:hover {
+      background: #595454;
+    }
+
+    .address-button {
+      display: block;
+      padding: 10px;
+      border: 2px solid var(--primary);
+      border-radius: 6px;
+      background: var(--accent);
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+
+    .address-button.selected {
+      background: var(--primary);
+      color: white;
+    }
+
+    .address-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .address-delete {
+      color: white; 
+      background-color: green; 
+      border: none;
+      padding: 4px 10px; 
+      border-radius: 4px; 
+      cursor: pointer;
+    }
+
+    .selected-address-tile {
+      border-left: 4px solid var(--primary);
+      background: #f9f9f9;
+      padding: 1rem;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      margin-bottom: 1rem;
+    }
+
+    .summary p, .summary strong {
+      margin: 0.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .item-row img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .payment-method label {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    #addressModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    #modalContent {
+      background: white;
+      width: 90%;
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 20px;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    #modalContent input,
+    #modalContent textarea {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      .btn {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+      }
+      h2, h3 {
+        font-size: 1.2rem;
+      }
+    }
+
+    #ordertoast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: var(--primary);
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 1rem;
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      font-weight: bold;
+    }
+        #availableCoupons {
+      margin-top: 14px;
+      padding: 10px;
+      background: #e8f5e9;
+      border-left: 4px solid #2e8b57;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+     .back-btn { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #2c5c2e; font-weight: bold; }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+</head>
+<body>
+<!--   <div class="sidebar-toggle" onclick="toggleSidebar()">=</div>
+  <div class="sidebar" id="sidebar">
+  <a href="index.html">Home</a>
+  </div>
+  <script>
+    function toggleSidebar() {
+       const sidebar = document.getElementById('sidebar');
+       if (sidebar.style.left === '0px') {
+         sidebar.style.left = '-240px';
+       } else {
+         sidebar.style.left = '0px';
+       }
+    }
+
+  </script> -->
+  <div class="card">
+<!--       <button onclick="history.back()" style="margin-top: 1rem; padding: 10px 16px; background-color: #007B55; color: white; border: none; border-radius: 6px; cursor: pointer;">
+  ← Back
+  </button> -->
+    <p><a onclick="history.back()" class="back-btn"> <- Back</a></p>
+    <div style="text-align:center; margin-bottom: 20px;">
+      <img src="https://verdantragrows.my.canva.site/_assets/media/5905e8339237cf372183c523f1486957.png"
+           alt="Verdantra Grows Logo" style="max-width: 160px; height: auto;" />
+    </div>
+    <h2>Checkout</h2>
+
+    <div id="addressSection" style="display: none;">
+      <h3>Select Address</h3>
+      <div id="addressButtons"></div>
+    </div>
+
+    <div id="selectedAddressContainer" style="display: none;">
+      <h3>Selected Address</h3>
+      <div id="selectedAddressTile" class="selected-address-tile"></div>
+    </div>
+    <div style="text-align: center;">
+      <button class="btn" onclick="openModal()">Add New Address</button>
+    </div>
+    <div style="height: 20px;"></div>
+    <div class="payment-method">
+      <h3>Payment Method</h3>
+      <label><input type="radio" name="payment" value="COD" checked> Cash on Delivery</label>
+      <label><input type="radio" name="payment" value="UPI"> UPI</label>
+    </div>
+
+    <div class="summary">
+    <div id="couponMarquee" style="margin-bottom: 10px;margin-top: 20px;color:#2e8b5e ;">
+<!--   <marquee behavior="scroll" direction="left" scrollamount="5" style="color: #2e8b5e; font-weight: bold;">
+    Loading available coupons...
+  </marquee> --> 
+   <div id="availableCoupons">Loading available coupons...</div>
+   </div>
+
+  <div style="margin-top: 10px;">
+  <input id="couponCode" placeholder="Enter Coupon Code" 
+  style="padding: 8px; width: 60%; text-transform: uppercase; font-weight: bold;">
+
+  <button onclick="applyCoupon()" style="padding: 8px 12px; margin-left: 6px; background: #2e8b57; color: white; border: none; border-radius: 6px; cursor: pointer;">Apply</button>
+  <div id="couponFeedback" style="margin-top: 6px; color: #c62828; font-weight: bold;"></div>
+   </div>
+    <p style="display:none;" id="couponRow">Coupon Discount: Rs. <span id="discountAmount">0</span></p>
+      <p>Subtotal: Rs. <span id="subtotal">0</span></p>
+      <p>GST (5%): Rs. <span id="tax">0</span></p>
+      <p>Shipping: Rs. <span id="shipping">50</span></p>
+      <p>Discount: Rs. <span id="discountAmount1">0</span></p>
+      <strong>Total: Rs. <span id="grandTotal">0</span></strong>
+    </div>
+    <div style="text-align: center;">
+      <button class="btn" onclick="placeOrder()">Place Order on WhatsApp</button>
+    </div>
+       <div style="margin-top:20px"></div>
+       <h3>Order Summary</h3>
+      <div id="itemsList"></div>
+  </div>
+
+  <!-- Modal -->
+  <div id="addressModal">
+    <div id="modalContent">
+    <input id="newName" placeholder="Name" />
+    <input id="newEmail" placeholder="Email" />
+    <textarea id="newAddress" placeholder="Full Address"></textarea>
+    <input id="newLabel" placeholder="Label (Home, Work)" />
+    <input id="newPincode" placeholder="PIN Code" type="number" />
+    <input id="newPhone" placeholder="Phone Number" type="tel" />
+    <div style="text-align: center;">
+      <button class="btn" onclick="saveAddress()">Save Address</button>
+    </div>
+    <div style="text-align: center;">
+      <button class="btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+ 
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+      authDomain: "verdantra-grows.firebaseapp.com",
+      projectId: "verdantra-grows"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let phone = localStorage.getItem("userPhone");
+      if (!phone) {
+       askPhoneNumber();
+      }
+
+
+    function askPhoneNumber() {
+      while (true) {
+        const input = prompt("Enter your 10-digit phone number:");
+        if (input && /^\d{10}$/.test(input)) {
+          phone = input;
+          localStorage.setItem("userPhone", phone);
+          break;
+        } else {
+          alert("Please enter a valid 10-digit phone number.");
+        }
+      }
+    }
+
+  
+    const cart = JSON.parse(localStorage.getItem("cartData") || "{}");
+    const orderId = "VDTR-" + Date.now();
+    let allAddresses = [], selectedAddress = null;
+    let subtotal = 0, itemList = [];
+    let appliedDiscount = 0;
+    let appliedCoupon = '';
+    const validCoupons = {};
+
+  async function loadCoupons() {
+    const snapshot = await db.collection("coupons").get();
+    let html = "<strong>Available Coupons:</strong><br>";
+
+    snapshot.forEach(doc => {
+      validCoupons[doc.id] = doc.data();
+      const { type, value, minAmount } = doc.data();
+
+      let offer = "";
+      if (type === "fixed") {
+        offer = `Flat Rs.${value} OFF${minAmount ? ` on minimum purchase of Rs.${minAmount}` : ""}`;
+      } else {
+        offer = `${value}% OFF${minAmount ? ` on minimum purchase of Rs.${minAmount}` : ""}`;
+      }
+
+      html += `<div><strong>${doc.id}</strong>   ${offer}</div>`;
+    });
+
+    document.getElementById("availableCoupons").innerHTML = html || "No active coupons.";
+    await initCouponFromStorage();
+    validateCartWithFirebase();
+  }
+
+
+loadCoupons();
+
+
+function applyCoupon() {
+  let code = document.getElementById("couponCode").value.trim();
+
+  // Normalize accents and convert to uppercase (e.g., "savé200" → "SAVE200")
+  code = code.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+
+  const feedback = document.getElementById("couponFeedback");
+
+  if (!code || !validCoupons[code]) {
+    appliedCoupon = '';
+    appliedDiscount = 0;
+    feedback.textContent = "Invalid coupon code.";
+    feedback.style.color = "red";
+    document.getElementById("couponRow").style.display = "none";
+    document.getElementById("discountAmount").innerText = appliedDiscount;
+    updateSummary();
+    showToast3("Invalid coupon code", "red");
+    return;
+  }
+
+  const discountInfo = validCoupons[code];
+  const minAmount = discountInfo.minAmount || 0;
+
+  if (subtotal < minAmount) {
+    appliedCoupon = '';
+    appliedDiscount = 0;
+    feedback.textContent = `Minimum purchase ₹${minAmount} required for this coupon.`;
+    feedback.style.color = "red";
+    document.getElementById("couponRow").style.display = "none";
+    document.getElementById("discountAmount").innerText = appliedDiscount;
+    updateSummary();
+    showToast3(`Total should be ₹${minAmount} or more to use "${code}"`, "orange");
+    return;
+  }
+
+  appliedCoupon = code;
+  appliedDiscount = discountInfo.type === "fixed"
+    ? discountInfo.value
+    : Math.round(subtotal * (discountInfo.value / 100));
+
+  feedback.textContent = `Coupon "${code}" applied!`;
+  feedback.style.color = "#2c5c2e";
+  document.getElementById("couponRow").style.display = "block";
+  document.getElementById("discountAmount").innerText = appliedDiscount;
+  showToast3(`Coupon "${code}" applied successfully!`);
+  localStorage.setItem("appliedCoupon", code);
+  localStorage.setItem("appliedDiscount", appliedDiscount);
+  updateSummary();
+  initCouponFromStorage();
+
+}
+
+async function initCouponFromStorage() {
+  const storedCode = localStorage.getItem("appliedCoupon");
+  if (storedCode && validCoupons[storedCode]) {
+    const discountInfo = validCoupons[storedCode];
+    const minAmount = discountInfo.minAmount || 0;
+
+    if (subtotal >= minAmount) {
+      appliedCoupon = storedCode;
+      appliedDiscount = discountInfo.type === "fixed"
+        ? discountInfo.value
+        : Math.round(subtotal * (discountInfo.value / 100));
+
+      document.getElementById("couponCode").value = storedCode;
+      document.getElementById("couponFeedback").textContent = `Coupon "${storedCode}" applied!`;
+      document.getElementById("couponFeedback").style.color = "#2c5c2e";
+      document.getElementById("couponRow").style.display = "block";
+      document.getElementById("discountAmount").innerText = appliedDiscount;
+    } else {
+      clearStoredCoupon();
+    }
+  } else {
+    clearStoredCoupon();
+  }
+}
+
+
+function clearStoredCoupon() {
+  localStorage.removeItem("appliedCoupon");
+  localStorage.removeItem("appliedDiscount");
+  appliedCoupon = '';
+  appliedDiscount = 0;
+  document.getElementById("couponCode").value = '';
+  document.getElementById("couponFeedback").textContent = '';
+  document.getElementById("couponRow").style.display = "none";
+}
+
+
+
+
+
+function renderItems() {
+  const listEl = document.getElementById("itemsList");
+  listEl.innerHTML = '';
+  subtotal = 0;
+  itemList = [];
+
+  const grouped = {};
+
+  for (let key in cart) {
+    const item = cart[key];
+    const name = item.name;
+    if (!grouped[name]) {
+      grouped[name] = {
+        name: name,
+        imageUrl: item.imageUrl || "https://via.placeholder.com/40",
+        sizes: []
+      };
+    }
+    grouped[name].sizes.push({ ...item, key });
+  }
+
+  for (let productName in grouped) {
+    const product = grouped[productName];
+
+    const tile = document.createElement("div");
+    tile.style.display = "flex";
+    tile.style.alignItems = "flex-start";
+    tile.style.justifyContent = "space-between";
+    tile.style.gap = "12px";
+    tile.style.background = "#f9f9f9";
+    tile.style.border = "1px solid #ddd";
+    tile.style.borderRadius = "8px";
+    tile.style.padding = "12px";
+    tile.style.marginBottom = "12px";
+
+    const img = document.createElement("img");
+    img.src = product.imageUrl;
+    img.style.width = "70px";
+    img.style.height = "70px";
+    img.style.objectFit = "cover";
+    img.style.borderRadius = "6px";
+    tile.appendChild(img);
+
+    const detailsWrapper = document.createElement("div");
+    detailsWrapper.style.flex = "1";
+
+    const nameRow = document.createElement("div");
+    nameRow.style.display = "flex";
+    nameRow.style.justifyContent = "space-between";
+    nameRow.style.alignItems = "center";
+
+    const name = document.createElement("strong");
+    name.textContent = product.name;
+    nameRow.appendChild(name);
+
+    const removeAllBtn = document.createElement("button");
+    removeAllBtn.textContent = "Remove";
+    removeAllBtn.style = "color: white;background-color: green;border: none;padding: 4px 10px; border-radius: 4px; cursor: pointer;";
+    removeAllBtn.onclick = () => {
+      product.sizes.forEach(sizeItem => {
+        delete cart[sizeItem.key];
+      });
+      localStorage.setItem("cartData", JSON.stringify(cart));
+      renderItems();
+      applyCoupon();
+    };
+    nameRow.appendChild(removeAllBtn);
+    detailsWrapper.appendChild(nameRow);
+
+    let productSubtotal = 0;
+
+    product.sizes.forEach(sizeItem => {
+      if (sizeItem.qty > 0) {
+        const sizeRow = document.createElement("div");
+        sizeRow.style.display = "flex";
+        sizeRow.style.alignItems = "center";
+        sizeRow.style.gap = "10px";
+        sizeRow.style.marginTop = "4px";
+
+        const sizeLabel = document.createElement("span");
+        sizeLabel.textContent = `${sizeItem.size} Rs.  ${sizeItem.price}`;
+        sizeRow.appendChild(sizeLabel);
+
+        const qtyLabel = document.createElement("span");
+        qtyLabel.textContent = `x ${sizeItem.qty}`;
+        sizeRow.appendChild(qtyLabel);
+
+        const addBtn = document.createElement("button");
+        addBtn.textContent = "+";
+        addBtn.onclick = () => {
+              let newQty = sizeItem.qty + 1;
+              let maxStock = cart[sizeItem.key].stock;
+              if (newQty > maxStock) {
+                 showToast(` Only ${maxStock} in stock.`);
+                 return;
+              }
+          sizeItem.qty++;
+          cart[sizeItem.key] = sizeItem;
+          localStorage.setItem("cartData", JSON.stringify(cart));
+          renderItems();
+        };
+        sizeRow.appendChild(addBtn);
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "-";
+        removeBtn.onclick = () => {
+          if (sizeItem.qty > 1) {
+            sizeItem.qty--;
+            cart[sizeItem.key] = sizeItem;
+          } else {
+            delete cart[sizeItem.key];
+          }
+          localStorage.setItem("cartData", JSON.stringify(cart));
+          renderItems();
+        };
+        sizeRow.appendChild(removeBtn);
+
+        detailsWrapper.appendChild(sizeRow);
+
+        const sizeTotal = sizeItem.qty * sizeItem.price;
+        productSubtotal += sizeTotal;
+        subtotal += sizeTotal;
+        itemList.push(`${product.name} (${sizeItem.size}) x ${sizeItem.qty}`);
+      }
+    });
+
+    const subtotalEl = document.createElement("div");
+    subtotalEl.style.marginTop = "8px";
+    subtotalEl.style.fontWeight = "bold";
+    subtotalEl.textContent = `Subtotal: Rs. ${productSubtotal}`;
+    detailsWrapper.appendChild(subtotalEl);
+
+    tile.appendChild(detailsWrapper);
+    listEl.appendChild(tile);
+  }
+  updateSummary();
+ 
+}
+
+function updateSummary() {
+  const cartData = JSON.parse(localStorage.getItem("cartData") || '{}');
+  const hasItems = Object.keys(cartData).length > 0;
+  const tax = Math.round(subtotal * 0.05);
+  let shipping = hasItems ? 50 : 0;
+  const total = subtotal + tax + shipping - appliedDiscount;
+
+  document.getElementById("subtotal").innerText = subtotal;
+  document.getElementById("tax").innerText = tax;
+  document.getElementById("shipping").innerText = shipping;
+  if (appliedDiscount > 0){
+     document.getElementById("discountAmount1").innerText = appliedDiscount;
+     document.getElementById("discountAmount1").style.color = "green";
+  }else{
+     document.getElementById("discountAmount1").innerText = 0;
+     document.getElementById("discountAmount1").style.color = "black";
+  }
+
+  document.getElementById("grandTotal").innerText = total >= 0 ? total : 0;
+  document.getElementById("grandTotal").style.color = "green";
+
+}
+
+  
+
+    async function loadAddresses() {
+      const doc = await db.collection("users").doc(phone).get();
+      const addressSection = document.getElementById("addressSection");
+      const addressButtons = document.getElementById("addressButtons");
+
+      if (doc.exists && (doc.data().addresses || []).length > 0) {
+        allAddresses = doc.data().addresses;
+        addressButtons.innerHTML = '';
+
+        allAddresses.forEach((a, i) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'address-wrapper';
+
+          const btn = document.createElement('div');
+          btn.className = 'address-button';
+          btn.innerText = `${a.label}: ${a.address}`;
+          btn.onclick = () => selectAddress(i, btn);
+          const delBtn = document.createElement('span');
+          delBtn.className = 'address-delete';
+          delBtn.innerText = 'Remove';
+          delBtn.title = 'Delete Address';
+          delBtn.onclick = (e) => {
+            e.stopPropagation();
+            deleteAddress(i);
+          };
+
+          wrapper.appendChild(btn);
+          wrapper.appendChild(delBtn);
+          addressButtons.appendChild(wrapper);
+        });
+
+        selectAddress(0, addressButtons.querySelector('.address-button'));
+        addressSection.style.display = 'block';
+      } else {
+        selectedAddress = null;
+        addressSection.style.display = 'none';
+        document.getElementById("selectedAddressContainer").style.display = 'none';
+      }
+    }
+
+    function selectAddress(index, btn) {
+      selectedAddress = allAddresses[index];
+      document.querySelectorAll('.address-button').forEach(el => el.classList.remove('selected'));
+      btn.classList.add('selected');
+      const tile = document.getElementById("selectedAddressTile");
+      tile.innerText = `${selectedAddress.name}\n${selectedAddress.address}\n${selectedAddress.email || ''}\n${selectedAddress.phone || ''}\n${selectedAddress.pincode || ''}`;
+      document.getElementById("selectedAddressContainer").style.display = 'block';
+    }
+
+    function openModal() {
+      document.getElementById("addressModal").style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById("addressModal").style.display = 'none';
+    }
+
+ async function saveAddress() {
+  const nameEl = document.getElementById("newName");
+  const emailEl = document.getElementById("newEmail");
+  const addressEl = document.getElementById("newAddress");
+  const labelEl = document.getElementById("newLabel");
+  const pincodeEl = document.getElementById("newPincode");
+  const phoneEl = document.getElementById("newPhone");
+
+  const name = nameEl.value.trim();
+  const email = emailEl.value.trim();
+  const address = addressEl.value.trim();
+  const label = labelEl.value.trim() || "Other";
+  const pincode = pincodeEl.value.trim();
+  const phoneField = phoneEl.value.trim();
+
+  if (!name || !address || !pincode || !phoneField) {
+    alert("Name, Address, PIN Code, and Phone Number are required.");
+    return;
+  }
+
+  const newAddr = { name, email, address, label, pincode, phone };
+  allAddresses.push(newAddr);
+  await db.collection("users").doc(phone).set({ phone, addresses: allAddresses, updated: new Date() });
+
+  // ✅ Clear form fields after saving
+  nameEl.value = "";
+  emailEl.value = "";
+  addressEl.value = "";
+  labelEl.value = "";
+  pincodeEl.value = "";
+  phoneEl.value = "";
+
+  closeModal();
+  loadAddresses();
+}
+
+
+    async function deleteAddress(index) {
+      if (!confirm("Are you sure you want to delete this address?")) return;
+      allAddresses.splice(index, 1);
+      await db.collection("users").doc(phone).set({ phone, addresses: allAddresses, updated: new Date() });
+      loadAddresses();
+    }
+
+
+async function validateCartWithFirebase() {
+  const keys = Object.keys(cart);
+  const groupedByProductId = {};
+
+  keys.forEach(key => {
+    const [productId] = key.split('_');
+    if (!groupedByProductId[productId]) groupedByProductId[productId] = [];
+    groupedByProductId[productId].push(key);
+  });
+
+  let updates = [];
+  for (const productId in groupedByProductId) {
+    const doc = await db.collection('products').doc(productId).get();
+    if (!doc.exists) continue;
+
+    const product = doc.data();
+    const sizes = product.sizes || [];
+
+    groupedByProductId[productId].forEach(cartKey => {
+      const item = cart[cartKey];
+      const matchedSize = sizes.find(s => s.label === item.size);
+
+      if (!matchedSize) {
+        updates.push({ cartKey, reason: "Size not found", action: "remove" });
+        delete cart[cartKey];
+      } else {
+        const stock = matchedSize.stock;
+        const price = matchedSize.price;
+
+        if (item.qty > stock) {
+          cart[cartKey].qty = stock;
+          updates.push({ cartKey, reason: `Only ${stock} in stock`, action: "adjust", newQty: stock });
+        }
+
+        if (item.price !== price) {
+          cart[cartKey].price = price;
+          updates.push({ cartKey, reason: `Price updated to Rs.${price}`, action: "update", newPrice: price });
+        }
+      }
+    });
+  }
+
+  localStorage.setItem("cartData", JSON.stringify(cart));
+  showCartUpdatesPopup(updates);
+  renderItems();
+  await applyCoupon();
+}
+
+function showCartUpdatesPopup(updates) {
+  if (updates.length === 0) return;
+
+  let html = `<strong>Cart Updated:</strong><br>`;
+  updates.forEach(update => {
+    html += `- ${cart[update.cartKey]?.name || update.cartKey} (${update.reason})<br>`;
+  });
+
+  const popup = document.createElement("div");
+  popup.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2e8b57;
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    z-index: 9999;
+    max-width: 90%;
+    font-size: 0.9rem;
+  `;
+  popup.innerHTML = html;
+
+  document.body.appendChild(popup);
+  setTimeout(() => popup.remove(), 8000);
+}
+
+
+
+
+    async function placeOrder() {
+      const cartData = JSON.parse(localStorage.getItem("cartData") || '{}');
+      const totalQty = Object.values(cartData).reduce((sum, item) => sum + item.qty, 0);
+
+      if (totalQty === 0) {
+        showToast("🛒 Your cart is empty. Please select a product.");
+        return
+      }
+      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+      if (!selectedAddress) return alert("Please select or add an address.");
+
+      const tax = Math.round(subtotal * 0.05);
+      const shipping = 50;
+      const total = subtotal + tax + shipping - appliedDiscount;
+
+
+      await db.collection("orders").add({
+        orderId,
+        phone,
+        name: selectedAddress.name,
+        email: selectedAddress.email,
+        address: selectedAddress.address,
+        items: itemList,
+        total,
+        tax,
+        shipping,
+        payment: paymentMethod,
+        status: "pending",
+        created: new Date()
+      });
+      let appliedCoupon1 = appliedCoupon;
+      let appliedDiscount1 = appliedDiscount;
+
+      await clearStoredCoupon();
+
+     // showOrderSuccessToastAndRedirect()
+       
+     const msg = 
+`Grovikto
+Order Receipt - ${orderId}
+
+Items:
+${itemList.map(i => `- ${i}`).join("\n")}
+
+Subtotal      : Rs-${subtotal}
+GST (5%)      : Rs-${tax}
+Shipping      : Rs-${shipping}
+Coupon Applied : ${appliedCoupon1 ? appliedCoupon1 : "None"}
+Discount       : Rs-${appliedDiscount1}
+-------------------------------------------------
+Total         : Rs-${total}
+
+Customer Info:
+Name          : ${selectedAddress.name}
+Phone         : ${selectedAddress.phone}
+Address       : ${selectedAddress.address}
+Payment Method: ${paymentMethod}
+
+Track your order:
+http://verdantraelixirs.shop/customerorder.html?orderId=${orderId}
+@Grovikto We believe in Quality your feedback matters to us
+http://verdantraelixirs.shop/customer-review.html`;
+
+
+
+      const url = `https://wa.me/919923566591?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+      localStorage.removeItem("cartData");
+      //alert("Thanks for your order ");
+      setTimeout(() => {
+      window.location.href = "index.html";
+        // Your homepage
+      }, 1000);
+
+    }
+
+    renderItems();
+    loadAddresses();
+  </script>
+<script>
+
+function showToast(message){
+  alert(message);
+}
+
+  function showOrderSuccessToastAndRedirect() {
+    // 1. Clear cart from localStorage
+   
+
+    // 2. Show the toast message
+    const toast = document.getElementById("ordertoast");
+    toast.style.visibility = "visible";
+
+    // 3. Wait for 2 seconds then redirect to homepage
+    setTimeout(() => {
+      toast.style.visibility = "hidden";
+        // Your homepage
+    }, 1000);
+
+     setTimeout(() => {
+       window.location.href = "index.html";
+    }, 2000);
+
+   
+  }
+
+  function showToast3(message, color = "#2c5c2e") {
+  const toast3 = document.getElementById("toast3");
+  toast3.textContent = message;
+  toast3.style.backgroundColor = color;
+  toast3.style.display = "block";
+  setTimeout(() => {
+    toast3.style.display = "none";
+  }, 3000);
+}
+
+</script>
+    
+    
+    <div id="ordertoast" style="
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #2c5c2e;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 16px;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  font-weight: bold;
+">
+  Thanks for your order!
+</div>
+<div id="toast3" style="
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2c5c2e;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  display: none;
+  z-index: 9999;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+"></div>
+
+
+
+
+
+</body>
+</html>

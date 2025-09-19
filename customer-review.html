@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Write a Review | GROVIKTO</title>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <style>
+    :root {
+      --primary: #2c5c2e;
+      --primary-dark: #1e4020;
+      --bg: #f9f9f9;
+      --card-bg: #fff;
+      --border: #ccc;
+      --text-dark: #333;
+      --star-color: gold;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg);
+      padding: 2rem 1rem;
+      margin: 0;
+      color: var(--text-dark);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    form {
+      max-width: 450px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    input, textarea {
+      width: 100%;
+      margin: 12px 0;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    .star-rating {
+      display: flex;
+      justify-content: space-between;
+      font-size: 2rem;
+      margin-top: 10px;
+    }
+
+    .star-rating span {
+      cursor: pointer;
+      color: #ccc;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .star-rating span:hover,
+    .star-rating span:hover ~ span {
+      transform: scale(1.1);
+    }
+
+    .star-rating span.selected {
+      color: var(--star-color);
+    }
+
+    #thankYouPopup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 300px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    .popup-content h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      form {
+        padding: 1.5rem;
+      }
+
+      .star-rating {
+        font-size: 1.7rem;
+      }
+
+      input, textarea {
+        padding: 12px;
+        font-size: 0.95rem;
+      }
+
+      button {
+        padding: 12px;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Leave a Review for <strong>GROVIKTO</strong></h2>
+
+  <form onsubmit="submitReview(event)">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="tel" id="phone" placeholder="Phone Number (10 digits)" maxlength="10" required>
+    <textarea id="comment" placeholder="Write your review..." rows="4" required></textarea>
+
+    <div class="star-rating" id="starRating">
+      <span data-value="1">★</span>
+      <span data-value="2">★</span>
+      <span data-value="3">★</span>
+      <span data-value="4">★</span>
+      <span data-value="5">★</span>
+    </div>
+    <input type="hidden" id="rating" required>
+
+    <button type="submit">Submit Review</button>
+  </form>
+
+  <div id="thankYouPopup">
+    <div class="popup-content">
+      <h3>Thank You!</h3>
+      <p>Your review has been submitted and will appear once approved.</p>
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+      authDomain: "verdantra-grows.firebaseapp.com",
+      projectId: "verdantra-grows",
+      storageBucket: "verdantra-grows.appspot.com",
+      messagingSenderId: "642225222429",
+      appId: "1:642225222429:web:b32000eda4a1195a45a7f4"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const stars = document.querySelectorAll("#starRating span");
+    const ratingInput = document.getElementById("rating");
+
+    stars.forEach(star => {
+      star.addEventListener("click", () => {
+        const value = star.getAttribute("data-value");
+        ratingInput.value = value;
+        stars.forEach(s => s.classList.toggle("selected", s.getAttribute("data-value") <= value));
+      });
+    });
+
+    async function submitReview(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const comment = document.getElementById("comment").value.trim();
+      const rating = parseInt(document.getElementById("rating").value);
+
+      if (!rating) {
+        alert("Please select a star rating.");
+        return;
+      }
+
+      if (!/^\d{10}$/.test(phone)) {
+        alert("Please enter a valid 10-digit phone number.");
+        return;
+      }
+
+      await db.collection("testimonials").add({
+        name,
+        phone,
+        comment,
+        rating,
+        approved: false,
+        created: firebase.firestore.Timestamp.now()
+      });
+
+      e.target.reset();
+      stars.forEach(s => s.classList.remove("selected"));
+      ratingInput.value = "";
+      document.getElementById("thankYouPopup").style.display = "flex";
+    }
+
+    function closePopup() {
+      document.getElementById("thankYouPopup").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>

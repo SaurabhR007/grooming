@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Coupon CMS - Verdantra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+  <div class="sidebar" id="sidebar">
+  <a href="index.html">Home</a>
+  </div>
+  <script>
+    function toggleSidebar() {
+       const sidebar = document.getElementById('sidebar');
+       if (sidebar.style.left === '0px') {
+         sidebar.style.left = '-240px';
+       } else {
+         sidebar.style.left = '0px';
+       }
+    }
+
+  </script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+    }
+    h2 {
+      color: #2c5c2e;
+    }
+    .form-section, .coupon-list {
+      background: white;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #2c5c2e;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .coupon-card {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .actions button {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+    <style>
+    .header-tabs a.active {
+      background-color: #2c5c2e;
+      color: white;
+    }
+        .sidebar-toggle {
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 1rem;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1001;
+  background: #2c5c2e;
+  color: white;
+  border-radius: 6px;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -240px;
+  width: 220px;
+  height: 100%;
+  background-color: #1e3d2f;
+  color: white;
+  padding-top: 4rem;
+  transition: 0.3s ease-in-out;
+  z-index: 1000;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 14px 18px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.sidebar a:hover {
+  background-color: #2c5c2e;
+}
+.header-tabs {
+  background-color: #f2f2f2;
+  padding: 10px 0;
+  box-shadow: inset 0 -1px 0 #ddd;
+}
+
+.header-tabs ul {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.header-tabs li a {
+  padding: 10px 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #2c5c2e;
+  border-bottom: 3px solid transparent;
+  transition: 0.3s ease;
+}
+
+.header-tabs li a:hover {
+  border-bottom: 3px solid #2c5c2e;
+}
+
+.header-tabs li a.active {
+  color: #1e3d2f;
+  border-bottom: 3px solid #1e3d2f;
+  font-weight: 700;
+}
+
+  </style>
+<nav class="header-tabs">
+  <ul>
+    <li><a href="admin.html" data-page="admin.html">Admin Panel</a></li>
+    <li><a href="slider.html" data-page="slider.html">Sliders</a></li>
+    <li><a href="order.html" data-page="order.html">Orders</a></li>
+    <li><a href="orderhistory.html" data-page="orderhistory.html">Order History</a></li>
+    <li><a href="coupons.html" data-page="orderhistory.html">Cupons</a></li>
+  </ul>
+</nav>
+
+  <h2>Manage Coupons</h2>
+
+  <div class="form-section">
+    <input type="text" id="couponCode" placeholder="Coupon Code (e.g., SAVE50)" required />
+    <input type="number" id="couponValue" placeholder="Discount Value (e.g., 50)" required />
+    <select id="couponType">
+      <option value="fixed">Fixed (₹)</option>
+      <option value="percent">Percentage (%)</option>
+    </select>
+    <input type="number" id="minAmount" placeholder="Minimum Order Amount (optional)" />
+    <button onclick="saveCoupon()">Save Coupon</button>
+    <button id="cancelEdit" onclick="cancelEdit()" style="display: none;">Cancel Edit</button>
+    <p id="couponStatus"></p>
+  </div>
+
+  <div class="coupon-list" id="couponList"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkZ5j7BDsf6u6f2fphTL0Au6tQ3NDTdIk",
+      authDomain: "verdantra-grows.firebaseapp.com",
+      projectId: "verdantra-grows",
+      storageBucket: "verdantra-grows.appspot.com",
+      messagingSenderId: "642225222429",
+      appId: "1:642225222429:web:b32000eda4a1195a45a7f4"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let editMode = false;
+    let editCouponId = null;
+
+    async function saveCoupon() {
+      const code = document.getElementById("couponCode").value.trim().toUpperCase();
+      const value = parseFloat(document.getElementById("couponValue").value);
+      const type = document.getElementById("couponType").value;
+      const minAmount = parseFloat(document.getElementById("minAmount").value);
+      const status = document.getElementById("couponStatus");
+
+      if (!code || isNaN(value)) {
+        status.innerText = "Enter valid coupon code and value";
+        return;
+      }
+
+      const data = {
+        value,
+        type,
+        minAmount: isNaN(minAmount) ? 0 : minAmount,
+        created: new Date()
+      };
+
+      try {
+        if (editMode && editCouponId) {
+          await db.collection("coupons").doc(editCouponId).update(data);
+          status.innerText = "Coupon updated";
+        } else {
+          await db.collection("coupons").doc(code).set(data);
+          status.innerText = "Coupon saved";
+        }
+        resetForm();
+        loadCoupons();
+      } catch (e) {
+        status.innerText = "Error saving coupon";
+      }
+    }
+
+    async function loadCoupons() {
+      const container = document.getElementById("couponList");
+      container.innerHTML = "";
+      const snapshot = await db.collection("coupons").orderBy("created", "desc").get();
+      snapshot.forEach(doc => {
+        const c = doc.data();
+        const div = document.createElement("div");
+        div.className = "coupon-card";
+        div.innerHTML = `
+          <strong>${doc.id}</strong><br>
+          Type: ${c.type}<br>
+          Value: ${c.type === "fixed" ? `₹${c.value}` : `${c.value}%`}<br>
+          Min Order: ₹${c.minAmount || 0}
+          <div class="actions" style="margin-top: 10px;">
+            <button onclick='editCoupon("${doc.id}", ${JSON.stringify(c).replace(/'/g, "\\'")})'>Edit</button>
+            <button onclick='deleteCoupon("${doc.id}")'>Delete</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function editCoupon(id, data) {
+      editMode = true;
+      editCouponId = id;
+      document.getElementById("couponCode").value = id;
+      document.getElementById("couponCode").disabled = true;
+      document.getElementById("couponValue").value = data.value;
+      document.getElementById("couponType").value = data.type;
+      document.getElementById("minAmount").value = data.minAmount || "";
+      document.getElementById("cancelEdit").style.display = "inline-block";
+    }
+
+    function cancelEdit() {
+      resetForm();
+    }
+
+    function resetForm() {
+      editMode = false;
+      editCouponId = null;
+      document.getElementById("couponForm")?.reset?.(); // safe fallback
+      document.getElementById("couponCode").value = '';
+      document.getElementById("couponValue").value = '';
+      document.getElementById("minAmount").value = '';
+      document.getElementById("couponCode").disabled = false;
+      document.getElementById("cancelEdit").style.display = "none";
+      document.getElementById("couponStatus").textContent = "";
+    }
+
+    async function deleteCoupon(id) {
+      if (confirm(`Delete coupon "${id}"?`)) {
+        await db.collection("coupons").doc(id).delete();
+        loadCoupons();
+      }
+    }
+
+    loadCoupons();
+  </script>
+</body>
+</html>
