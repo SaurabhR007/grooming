@@ -235,8 +235,8 @@
     }
      .back-btn { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #2c5c2e; font-weight: bold; }
   </style>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
@@ -303,19 +303,35 @@
   <div id="couponFeedback" style="margin-top: 6px; color: #c62828; font-weight: bold;"></div>
    </div>
     <p style="display:none;" id="couponRow">Coupon Discount: Rs. <span id="discountAmount">0</span></p>
-      <p>Subtotal: Rs. <span id="subtotal">0</span></p>
-      <p>GST (5%): Rs. <span id="tax">0</span></p>
-      <p>Shipping: Rs. <span id="shipping">50</span></p>
-      <p>Discount: Rs. <span id="discountAmount1">0</span></p>
-      <strong>Total: Rs. <span id="grandTotal">0</span></strong>
+        <p>Subtotal: Rs. <span id="subtotal">0</span></p>
+        <p>Shipping: Rs. <span id="shipping">50</span></p>
+        <p>Discount: Rs. <span id="discountAmount1">0</span></p>
+        <strong>Total: Rs. <span id="grandTotal">0</span></strong>
     </div>
     <div style="text-align: center;">
-      <button class="btn" onclick="placeOrder()">Place Order on WhatsApp</button>
+        <button class="btn" onclick="placeOrder()">Place Order</button>
+      <button class="btn" onclick="placeOrderOnWhatsApp()">Place Order on WhatsApp</button>
     </div>
        <div style="margin-top:20px"></div>
        <h3>Order Summary</h3>
       <div id="itemsList"></div>
   </div>
+
+<div id="orderPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+    <div id="orderPopupContent" style="background:#fff; padding:20px; max-width:600px; width:90%; border-radius:10px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.2); font-family:monospace; line-height:1.5; position:relative;">
+        <h2 style="text-align:center;">Thank You For Your Purchase With Us!</h2>
+        <pre id="popupOrderContent" style="white-space:pre-line; max-height:400px; overflow:auto;"></pre>
+        <div style="text-align:center; margin-top:20px;">
+            <button id="downloadReceiptBtn" style="margin-right:10px; padding:10px 20px;">Download</button>
+            <button id="shareReceiptBtn" style="padding:10px 20px;">Share</button>
+            <button id="popupDoneBtn" style="margin-left:10px; padding:10px 20px;">Done</button>
+        </div>
+    </div>
+</div>
+
+
 
   <!-- Modal -->
   <div id="addressModal">
@@ -629,28 +645,26 @@ function renderItems() {
  
 }
 
-function updateSummary() {
-  const cartData = JSON.parse(localStorage.getItem("cartData") || '{}');
-  const hasItems = Object.keys(cartData).length > 0;
-  const tax = Math.round(subtotal * 0.05);
-  let shipping = hasItems ? 50 : 0;
-  const total = subtotal + tax + shipping - appliedDiscount;
+    function updateSummary() {
+        const cartData = JSON.parse(localStorage.getItem("cartData") || '{}');
+        const hasItems = Object.keys(cartData).length > 0;
+        let shipping = hasItems ? 50 : 0;
+        const total = subtotal + shipping - appliedDiscount;
 
-  document.getElementById("subtotal").innerText = subtotal;
-  document.getElementById("tax").innerText = tax;
-  document.getElementById("shipping").innerText = shipping;
-  if (appliedDiscount > 0){
-     document.getElementById("discountAmount1").innerText = appliedDiscount;
-     document.getElementById("discountAmount1").style.color = "green";
-  }else{
-     document.getElementById("discountAmount1").innerText = 0;
-     document.getElementById("discountAmount1").style.color = "black";
-  }
+        document.getElementById("subtotal").innerText = subtotal;
+        document.getElementById("shipping").innerText = shipping;
+        if (appliedDiscount > 0){
+            document.getElementById("discountAmount1").innerText = appliedDiscount;
+            document.getElementById("discountAmount1").style.color = "green";
+        } else {
+            document.getElementById("discountAmount1").innerText = 0;
+            document.getElementById("discountAmount1").style.color = "black";
+        }
 
-  document.getElementById("grandTotal").innerText = total >= 0 ? total : 0;
-  document.getElementById("grandTotal").style.color = "green";
+        document.getElementById("grandTotal").innerText = total >= 0 ? total : 0;
+        document.getElementById("grandTotal").style.color = "green";
+    }
 
-}
 
   
 
@@ -832,55 +846,178 @@ function showCartUpdatesPopup(updates) {
   setTimeout(() => popup.remove(), 8000);
 }
 
-
-
-
     async function placeOrder() {
-      const cartData = JSON.parse(localStorage.getItem("cartData") || '{}');
-      const totalQty = Object.values(cartData).reduce((sum, item) => sum + item.qty, 0);
+        const cartData = JSON.parse(localStorage.getItem("cartData") || '{}');
+        const totalQty = Object.values(cartData).reduce((sum, item) => sum + item.qty, 0);
 
-      if (totalQty === 0) {
-        showToast("🛒 Your cart is empty. Please select a product.");
-        return
-      }
-      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-      if (!selectedAddress) return alert("Please select or add an address.");
+        if (totalQty === 0) {
+            showToast("🛒 Your cart is empty. Please select a product.");
+            return;
+        }
 
-      const tax = Math.round(subtotal * 0.05);
-      const shipping = 50;
-      const total = subtotal + tax + shipping - appliedDiscount;
+        const paymentMethodEl = document.querySelector('input[name="payment"]:checked');
+        if (!paymentMethodEl) return alert("Please select a payment method.");
+        const paymentMethod = paymentMethodEl.value;
+
+        if (!selectedAddress) return alert("Please select or add an address.");
+
+        const shipping = 50;
+        const total = subtotal + shipping - appliedDiscount;
+
+        // Save order in Firestore
+        await db.collection("orders").add({
+            orderId,
+            phone,
+            name: selectedAddress.name,
+            email: selectedAddress.email,
+            address: selectedAddress.address,
+            items: itemList,
+            total,
+            shipping,
+            payment: paymentMethod,
+            status: "pending",
+            created: new Date()
+        });
+
+        const appliedCoupon1 = appliedCoupon;
+        const appliedDiscount1 = appliedDiscount;
+        await clearStoredCoupon();
+
+        // Build receipt message
+        const msg =
+            `Grovikto - Make Your Identity
+             Website - www.grovikto.in
+             Contact for Query - +91-9916315079
+Order Receipt - ${orderId}
+Track your order below link
+https://www.grovikto.in/customerorder.html?orderId=${orderId}
+Subtotal      : Rs-${subtotal}
+Shipping      : Rs-${shipping}
+Coupon Applied : ${appliedCoupon1 ? appliedCoupon1 : "None"}
+Discount       : Rs-${appliedDiscount1}
+----------------
+Total         : Rs-${total}
+
+Payment Method: ${paymentMethod}
+
+Thanks For Shopping With Us. We will confirm your order soon.`;
+
+        // Clear cart
+        localStorage.removeItem("cartData");
+
+        // Show popup with order receipt
+        showOrderPopup(msg);
+    }
+
+    function showOrderPopup(msg) {
+        const popup = document.getElementById("orderPopup");
+        const content = document.getElementById("popupOrderContent");
+        const doneBtn = document.getElementById("popupDoneBtn");
+        const downloadBtn = document.getElementById("downloadReceiptBtn");
+        const shareBtn = document.getElementById("shareReceiptBtn");
+        const popupContent = document.getElementById("orderPopupContent");
+
+        content.textContent = msg;
+        popup.style.display = "flex";
+
+        // Done button: close popup and go home
+        doneBtn.onclick = () => {
+            popup.style.display = "none";
+            window.location.href = "index.html";
+        };
+
+        // Download button
+        downloadBtn.onclick = () => {
+            // Save original styles
+            const origHeight = popupContent.style.height;
+            const origOverflow = popupContent.style.overflow;
+
+            // Expand container to full height
+            popupContent.style.height = "auto";
+            popupContent.style.overflow = "visible";
+
+            html2canvas(popupContent, { scale: 2 }).then(canvas => {
+                // Restore original styles
+                popupContent.style.height = origHeight;
+                popupContent.style.overflow = origOverflow;
+
+                const link = document.createElement('a');
+                link.download = `Grovikto_Receipt_${Date.now()}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        };
 
 
-      await db.collection("orders").add({
-        orderId,
-        phone,
-        name: selectedAddress.name,
-        email: selectedAddress.email,
-        address: selectedAddress.address,
-        items: itemList,
-        total,
-        tax,
-        shipping,
-        payment: paymentMethod,
-        status: "pending",
-        created: new Date()
-      });
-      let appliedCoupon1 = appliedCoupon;
-      let appliedDiscount1 = appliedDiscount;
+        shareBtn.onclick = async () => {
+            try {
+                if (!navigator.share) {
+                    alert("Sharing is not supported on this device. You can copy the text instead.");
+                    return;
+                }
 
-      await clearStoredCoupon();
+                const textToShare = document.getElementById("popupOrderContent").textContent;
 
-     // showOrderSuccessToastAndRedirect()
-       
-     const msg = 
-`Grovikto - Make Your Identity
+                await navigator.share({
+                    title: "Grovikto Order Receipt",
+                    text: textToShare
+                });
+
+                console.log("Receipt shared successfully!");
+            } catch (err) {
+                console.error("Share failed:", err);
+            }
+        };
+
+
+    }
+
+
+
+
+
+
+    async function placeOrderOnWhatsApp() {
+        const cartData = JSON.parse(localStorage.getItem("cartData") || '{}');
+        const totalQty = Object.values(cartData).reduce((sum, item) => sum + item.qty, 0);
+
+        if (totalQty === 0) {
+            showToast("🛒 Your cart is empty. Please select a product.");
+            return;
+        }
+
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        if (!selectedAddress) return alert("Please select or add an address.");
+
+        let shipping = 50;
+        const total = subtotal + shipping - appliedDiscount;
+
+        await db.collection("orders").add({
+            orderId,
+            phone,
+            name: selectedAddress.name,
+            email: selectedAddress.email,
+            address: selectedAddress.address,
+            items: itemList,
+            total,
+            shipping,
+            payment: paymentMethod,
+            status: "pending",
+            created: new Date()
+        });
+
+        let appliedCoupon1 = appliedCoupon;
+        let appliedDiscount1 = appliedDiscount;
+        await clearStoredCoupon();
+
+        const msg =
+            `Grovikto - Make Your Identity
 Order Receipt - ${orderId}
 
 Items:
 ${itemList.map(i => `- ${i}`).join("\n")}
 
 Subtotal      : Rs-${subtotal}
-GST (5%)      : Rs-${tax}
 Shipping      : Rs-${shipping}
 Coupon Applied : ${appliedCoupon1 ? appliedCoupon1 : "None"}
 Discount       : Rs-${appliedDiscount1}
@@ -893,27 +1030,25 @@ Phone         : ${selectedAddress.phone}
 Address       : ${selectedAddress.address}
 Payment Method: ${paymentMethod}
 
-Thanks For Shopping With Us . We will confirm your order soon
+Thanks For Shopping With Us. We will confirm your order soon.
 
 Track your order:
 https://www.grovikto.in/customerorder.html?orderId=${orderId}
-@Grovikto We believe in Quality your feedback matters to us
+@Grovikto We believe in Quality. Your feedback matters to us.
 https://www.grovikto.in/customer-review.html
-Follow us on instagram for more updates
+Follow us on Instagram for more updates:
 https://www.instagram.com/grovikto`;
 
-
-
-      const url = `https://wa.me/919923566591?text=${encodeURIComponent(msg)}`;
-      window.open(url, '_blank');
-      localStorage.removeItem("cartData");
-      //alert("Thanks for your order ");
-      setTimeout(() => {
-      window.location.href = "index.html";
-        // Your homepage
-      }, 1000);
-
+        const url = `https://wa.me/919923566591?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+        localStorage.removeItem("cartData");
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1000);
     }
+
+
+
 
     renderItems();
     loadAddresses();
