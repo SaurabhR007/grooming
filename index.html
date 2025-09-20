@@ -1778,84 +1778,134 @@ function showToast(message) {
   </script>
   <script>
     let authenticProducts = [];
-    let currentPopup = 0;
+    let currentIndex = 0;      // index of the item currently visible
     let popupStarted = false;
     let popupInterval;
 
-    // 🔹 Fetch products from Firestore
-    async function loadAuthenticProducts() {
-      const snapshot = await db.collection("authenticProducts").get();
-      authenticProducts = snapshot.docs.map(doc => doc.data());
-      if (authenticProducts.length > 0) {
-        startPopupCarousel();
+    // call once after DOM ready
+    function initPopupCard() {
+      const card = document.getElementById("popupCard");
+      if (!card) return;
+
+      // ensure card is positioned so overlay can cover it
+      if (getComputedStyle(card).position === "static") {
+        card.style.position = "relative";
       }
+
+      // create a transparent overlay that sits above iframe/img and captures clicks
+      let overlay = document.getElementById("popupOverlay");
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "popupOverlay";
+        Object.assign(overlay.style, {
+          position: "absolute",
+          top: "0",
+          left: "0",
+          right: "0",
+          bottom: "0",
+          cursor: "pointer",
+          zIndex: "9999",
+          background: "transparent"
+        });
+        card.appendChild(overlay);
+      }
+
+      overlay.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (!authenticProducts.length) {
+          console.warn("No products loaded yet.");
+          return;
+        }
+        console.log("overlay clicked, currentIndex:", currentIndex);
+        openDetailPage(currentIndex);
+      });
     }
 
-    function showNextAuthenticPopup() {
-     // if (authenticProducts.length === 0) return;
-
+    function renderPopup(index) {
       const card = document.getElementById("popupCard");
       const img = document.getElementById("popupImage");
       const iframe = document.getElementById("popupVideo");
       const title = document.getElementById("popupTitle");
       const desc = document.getElementById("popupDesc");
 
-      const item = authenticProducts[currentPopup];
+      if (!card || !img || !iframe || !title || !desc) return;
 
-      // Slide out current
+      const item = authenticProducts[index];
+      if (!item) return;
+
+      // hide/clear previous
+      iframe.style.display = "none";
+      iframe.src = "";
+      img.style.display = "none";
+
+      if (item.isVideo) {
+        iframe.src = item.video || "";
+        iframe.style.display = "block";
+      } else {
+        img.src = item.image || "";
+        img.style.display = "block";
+      }
+
+      title.textContent = item.title || "";
+      desc.textContent = item.desc || "";
+
+      // now mark this index as the visible one
+      currentIndex = index;
+    }
+
+    function showNextAuthenticPopup() {
+      if (!authenticProducts.length) return;
+
+      const card = document.getElementById("popupCard");
+      if (!card) return;
+
+      // slide out
       card.classList.remove("show");
       card.classList.add("hide");
 
       setTimeout(() => {
-        // Clear previous
-        img.style.display = "none";
-        iframe.style.display = "none";
+        // compute next index relative to currently visible
+        const next = (currentIndex + 1) % authenticProducts.length;
+        renderPopup(next);
 
-        if (item.isVideo) {
-          iframe.src = item.video;
-          iframe.style.display = "block";
-        } else {
-          img.src = item.image;
-          iframe.src = "";
-          img.style.display = "block";
-        }
-
-        title.textContent = item.title;
-        desc.textContent = item.desc;
-
-        // Slide in new
+        // force reflow then slide in
+        void card.offsetWidth;
         card.classList.remove("hide");
-        void card.offsetWidth; // trigger reflow
         card.classList.add("show");
-
-        currentPopup = (currentPopup + 1) % authenticProducts.length;
-      }, 400); // matches slide-out duration
+      }, 400); // must match CSS transition duration
     }
 
     function openDetailPage(index) {
       const item = authenticProducts[index];
-      // Example: pass product id or title in query string
-      window.location.href = `${item.link}`;
+      if (!item) return;
+      // open item.link or fallback to id-based page
+      const url = item.link || `detail.html?id=${item.id || index}`;
+      window.location.href = url;
     }
 
-    // attach click event on card
-    document.getElementById("popupCard").addEventListener("click", () => {
-      const len = authenticProducts.length;
-      if (!len) return;
-      const visibleIndex = (currentPopup - 1 + len) % len; // fix: get the displayed item
-      openDetailPage(visibleIndex);
-    });
-
-
     function startPopupCarousel() {
-      if (!popupStarted) {
-        popupStarted = true;
-        showNextAuthenticPopup();
-        popupInterval = setInterval(showNextAuthenticPopup, 6000);
+      if (popupStarted || authenticProducts.length === 0) return;
+      popupStarted = true;
+      // show currentIndex (initial)
+      renderPopup(currentIndex);
+      popupInterval = setInterval(showNextAuthenticPopup, 6000);
+    }
+
+    // Example Firestore loader — adapt as you have it
+    async function loadAuthenticProducts() {
+      const snapshot = await db.collection("authenticProducts").get();
+      authenticProducts = snapshot.docs.map(doc => {
+        const d = doc.data();
+        d.id = doc.id;
+        return d;
+      });
+
+      if (authenticProducts.length > 0) {
+        initPopupCard();
+        startPopupCarousel();
       }
     }
 
-    // Trigger when section scrolls into view
     const observer = new IntersectionObserver(
             (entries) => {
               if (entries[0].isIntersecting) {
