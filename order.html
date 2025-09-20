@@ -141,6 +141,7 @@
       cursor: pointer;
       background: #ddd;
     }
+
     .tabs button.active {
       background: #2c5c2e;
       color: white;
@@ -153,6 +154,13 @@
       margin-bottom: 1rem;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
+
+    .status-canceled {
+      border-left: 5px solid red;
+      background: #fdecea;
+      color: #b71c1c;
+    }
+
     .status-pending { border-left: 5px solid orange; }
     .status-preparing { border-left: 5px solid #2196f3; }
     .status-out { border-left: 5px solid #ff9800; }
@@ -235,14 +243,18 @@
       pending: '⏳ Pending',
       preparing: '👨‍🍳 Preparing',
       out_for_delivery: '🚚 Out for Delivery',
-      delivered: '✅ Delivered'
+      delivered: '✅ Delivered',
+      canceled: '❌ Canceled'       // new state
     };
+
     const statusClasses = {
       pending: 'status-pending',
       preparing: 'status-preparing',
       out_for_delivery: 'status-out',
-      delivered: 'status-delivered'
+      delivered: 'status-delivered',
+      canceled: 'status-canceled'  // new class
     };
+
 
     async function loadOrders() {
       const snapshot = await db.collection("orders").orderBy("created", "desc").get();
@@ -298,12 +310,21 @@
         pending: 'preparing',
         preparing: 'out_for_delivery',
         out_for_delivery: 'delivered',
-        delivered: null
+        delivered: null,
+        canceled: null
       };
       const next = flow[currentStatus];
-      if (!next) return '';
-      return `<button class="status-btn" onclick="updateStatus('${id}', '${next}')">Mark as ${statusLabels[next]}</button>`;
+      let btn = '';
+      if (next) {
+        btn += `<button class="status-btn" onclick="updateStatus('${id}', '${next}')">Mark as ${statusLabels[next]}</button>`;
+      }
+      // Add Cancel button for all except delivered/canceled
+      if (currentStatus !== 'delivered' && currentStatus !== 'canceled') {
+        btn += ` <button class="status-btn" style="background:red" onclick="updateStatus('${id}', 'canceled')">Cancel Order</button>`;
+      }
+      return btn;
     }
+
 
     async function updateStatus(id, newStatus) {
       await db.collection("orders").doc(id).update({ status: newStatus });
