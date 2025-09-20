@@ -113,7 +113,7 @@
 
 
   <h2>📦 Track Your Order</h2>
-  <input type="text" id="orderIdInput" placeholder="Enter your Order ID (e.g., VDTR-...)" value="VDTR-"/>
+  <input type="text" id="orderIdInput" placeholder="Enter your Order ID (e.g., VDTR-...) Or Phone No" value=""/>
   <button onclick="fetchOrderById()">Search</button>
 
   <div id="results"></div>
@@ -146,36 +146,51 @@
     const db = firebase.firestore();
 
     async function fetchOrderById() {
-      const orderId = document.getElementById("orderIdInput").value.trim();
+      const input = document.getElementById("orderIdInput").value.trim();
       const resultsDiv = document.getElementById("results");
       resultsDiv.innerHTML = '';
 
-      if (!orderId.startsWith("VDTR-")) {
-        resultsDiv.innerHTML = '<p>Please enter a valid Order ID (e.g., VDTR-...)</p>';
+      if (!input) {
+        resultsDiv.innerHTML = '<p>Please enter a valid Order ID or phone number.</p>';
         return;
       }
 
       try {
-        const querySnapshot = await db.collection("orders").where("orderId", "==", orderId).get();
+        let querySnapshot;
+
+        if (input.startsWith("VDTR-")) {
+          // Search by Order ID
+          querySnapshot = await db.collection("orders")
+                  .where("orderId", "==", input)
+                  .get();
+        } else {
+          // Search by phone number
+          querySnapshot = await db.collection("orders")
+                  .where("phone", "==", input)
+                  .get();
+        }
+
         if (querySnapshot.empty) {
-          resultsDiv.innerHTML = '<p>No order found for this Order ID.</p>';
+          resultsDiv.innerHTML = '<p>No order found for this input.</p>';
           return;
         }
 
         querySnapshot.forEach(doc => {
           const o = doc.data();
-          const card = document.createElement("div");
           const status = (o.status || 'pending').replace(/ /g, '_');
+          const card = document.createElement("div");
           card.className = `order-card ${status}`;
           card.innerHTML = `
-            <div><strong>Order ID:</strong> ${o.orderId}</div>
-            <div><strong>Status:</strong> ${(o.status || 'pending').replace(/_/g, ' ').toUpperCase()}</div>
-            <div><strong>Total:</strong> ₹${o.total}</div>
-            <div><strong>Items:</strong><br>${(o.items || []).map(i => `- ${i}`).join('<br>')}</div>
-            <div><strong>Date:</strong> ${o.created?.toDate ? o.created.toDate().toLocaleString() : '-'}</div>
-          `;
+        <div><strong>Order ID:</strong> ${o.orderId}</div>
+        <div><strong>Status:</strong> ${(o.status || 'pending').replace(/_/g, ' ').toUpperCase()}</div>
+        <div><strong>Total:</strong> ₹${o.total}</div>
+        <div><strong>Items:</strong><br>${(o.items || []).map(i => `- ${i}`).join('<br>')}</div>
+        <div><strong>Date:</strong> ${o.created?.toDate ? o.created.toDate().toLocaleString() : '-'}</div>
+        <div><strong>Phone:</strong> ${o.phone || '-'}</div>
+      `;
           resultsDiv.appendChild(card);
         });
+
       } catch (err) {
         resultsDiv.innerHTML = '<p>Error fetching order. Please try again later.</p>';
         console.error(err);
