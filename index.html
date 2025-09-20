@@ -12,8 +12,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="style.2.css">
-  <script src="script.2.js"></script>
+  <link rel="stylesheet" href="style.3.css">
+  <script src="script.3.js"></script>
   <style>
         body {
       font-family: 'Segoe UI', sans-serif;
@@ -1831,6 +1831,21 @@ function showToast(message) {
         currentPopup = (currentPopup + 1) % authenticProducts.length;
       }, 400); // matches slide-out duration
     }
+
+    function openDetailPage(index) {
+      const item = authenticProducts[index];
+      // Example: pass product id or title in query string
+      window.location.href = `${item.link}`;
+    }
+
+    // attach click event on card
+    document.getElementById("popupCard").addEventListener("click", () => {
+      const len = authenticProducts.length;
+      if (!len) return;
+      const visibleIndex = (currentPopup - 1 + len) % len; // fix: get the displayed item
+      openDetailPage(visibleIndex);
+    });
+
 
     function startPopupCarousel() {
       if (!popupStarted) {
