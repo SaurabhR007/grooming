@@ -11,7 +11,7 @@
     .images { display: flex; overflow-x: auto; gap: 1rem; margin-bottom: 1rem; }
     .images img { height: 200px; border-radius: 8px; object-fit: cover; }
     .description, .video { margin: 1rem 0; }
-    .back-btn { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #2c5c2e; font-weight: bold; }
+    .back-btn { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #2c5c2e; font-weight: bold; font-family: fongsong}
 
     .size-options {
       margin: 1rem 0;
@@ -22,7 +22,7 @@
 
     .size-options button {
       padding: 8px 16px;
-      border: 2px solid #595454;
+      border: 0.1px solid #595454;
       border-radius: 5px;
       background:white;
       cursor: pointer;
@@ -60,13 +60,14 @@
 
     .rating-actions button {
       padding: 6px 12px;
-      background: #2e8b57;
+      background: linear-gradient(to top, #8fbb90, #4caf508a);
       color: white;
       border: none;
       border-radius: 5px;
       font-weight: bold;
       font-size: 16px;
       cursor: pointer;
+      font-family:fongsong;
     }
 
     .buy-btn {
@@ -141,7 +142,7 @@
 <body>
   <div class="container">
     <a href="index.html" class="back-btn">← Back to Products</a>
-    <h1 id="productName"></h1>
+    <h1 id="productName" style="font-family: fantasy"></h1>
     <div class="images" id="imageGallery"></div>
 
     <div id="sizeSelection" class="size-options"></div>
@@ -161,10 +162,10 @@
     <div id="productBenefits" class="benefits-section" style="display:none;"></div>
     <div class="video" id="productVideo"></div>
     <div class="reviews-section">
-  <h3>Customer Reviews</h3>
+  <h3 style="font-family: fantasy">Customer Reviews</h3>
   <div id="productReviews"></div>
 
- <h4>Leave a Review</h4>
+ <h4 style="font-family: fantasy">Leave a Review</h4>
 <form onsubmit="submitProductReview(event)" class="review-form">
   <input type="text" id="reviewerName" placeholder="Your Name" required />
   <input type="tel" id="reviewerPhone" placeholder="Mobile Number" required pattern="[0-9]{10}" />
@@ -184,7 +185,7 @@
 
   </div>
 
-  <a href="checkout.html" style="position: fixed; top: 20px; right: 20px; background: #2e8b57; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;">
+  <a href="checkout.html" style="position: fixed; top: 20px; right: 20px; background: linear-gradient(to top, #8fbb90, #4caf508a); color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none;font-family: fongsong">
     🛒 Cart (<span id="cartCount">0</span>)
   </a>
 
@@ -465,7 +466,7 @@
   }
 
   .review-form button {
-    background-color: #2e8b57;
+    background:linear-gradient(to top, #8fbb90, #4caf508a);
     color: white;
     padding: 12px;
     border: none;

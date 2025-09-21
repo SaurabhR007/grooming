@@ -138,7 +138,7 @@
     .qty-control button {
       padding: 0.3rem 0.7rem;
       border: none;
-      background: #2e8b58;
+      background:linear-gradient(to top, #8fbb90, #4caf508a);
       color: white;
       font-size: 1rem;
       border-radius: 4px;
@@ -164,7 +164,9 @@
     }
     .slider {
       position: relative;
-      height: 300px;
+      height: auto;
+      width: 100%;
+      aspect-ratio: 24/9;
     }
     .slide {
       position: absolute;
@@ -224,7 +226,7 @@
       top: 60px;
       left: 10px;
       z-index: 1001;
-      background: #2c5c2e;
+      background:linear-gradient(to top, #8fbb90, #4caf508a);
       color: white;
       border-radius: 6px;
     }
@@ -234,12 +236,12 @@
       left: -240px;
       width: 220px;
       height: 100%;
-      background-color:#595454;
+      background: linear-gradient(to right, #8fbb90, #59545466);
       color: white;
       padding-top: 4rem;
       transition: 0.3s ease-in-out;
       z-index: 1000;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+      /* box-shadow: 2px 0 8px rgba(0,0,0,0.2); */
     }
     .sidebar a {
       display: block;
@@ -278,14 +280,15 @@
   .tab-btn {
     padding: 10px 16px;
     border-radius: 5px;
-    border: 1px solid #2c5c2e;
+    border: 0.1px solid #2c5c2e;
     color: #151515;
     background: #fbfbfb;
     font-weight: bold;
     cursor: pointer;
+    font-family: fongsong;
   }
   .tab-btn.active {
-    background-color: #595454;
+    background:linear-gradient(to top, #8fbb90, #4caf508a);
     color: white;
   }
 
@@ -307,7 +310,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #2e8b57;
+  background:linear-gradient(to top, #8fbb90, #4caf508a);
   color: white;
   padding: 12px 16px;
   border-radius: 50px;
@@ -324,7 +327,7 @@
   margin-left: 6px;
   font-size: 12px;
 }
-@media (max-width: 768px) {
+@media (max-width: 599px) {
   .slider {
     height: auto;
     aspect-ratio: 16 / 9;
@@ -341,7 +344,7 @@
 .segment-btn {
   padding: 6px 12px;
   border-radius: 5px;
-  border: 1px solid #1b1c1b;
+  border: 0.1px solid #1b1c1b;
   background: #fff;
   color: black;
   font-size: 0.9rem;
@@ -349,7 +352,7 @@
   font-weight: bold;
 }
 .segment-btn.active {
-  background: #595454;
+  background:#99c99a;
   color: white;
 }
 .stock-label {
@@ -425,6 +428,8 @@
   z-index: 999;
   width: 90%;
   max-width: 360px;
+  font-family: fantasy;
+  font-weight: 500;
 }
 
 .toast-card {
@@ -537,6 +542,7 @@ p.ex1 {
   .cart-product h3 {
         margin-block-start:0.3em;
         margin-block-end:0.3em;
+        font-family: fongsong;
   }
 }
 */
@@ -594,7 +600,7 @@ p.ex1 {
       padding: 4px 10px;
       margin: 0 4px;
       font-size: 1rem;
-      background: #2e8b57;
+      background: linear-gradient(to top, #8fbb90, #4caf508a);
       color: white;
       border: none;
       border-radius: 4px;
@@ -625,7 +631,7 @@ p.ex1 {
     .button1 {
       display: inline-block;
       margin-top: 1.5rem;
-      background: linear-gradient(135deg, #2c5c2e, #2c5c2e);
+      background:linear-gradient(to top, #8fbb90, #4caf508a);
       color: white;
       padding: 0.8rem 0.8rem;
       border-radius: 5px;
@@ -634,6 +640,7 @@ p.ex1 {
       text-align: center;
       width: 60%;
       transition: transform 0.2s ease;
+      font-family: fongsong;
     }
     .button1:hover {
       transform: scale(1.05);
@@ -772,8 +779,9 @@ p.ex1 {
 
 .tagline {
   font-size: 1.2rem;
-  color: black;
-  margin: 0.5rem 0 1rem;
+  color: darkgreen;
+  margin: 0.1rem 0 1rem;
+  font-family:fantasy;
 }
 
 .action-buttons {
@@ -784,13 +792,14 @@ p.ex1 {
 }
 
 .action-btn {
-  background-color: #595454;
+  background:linear-gradient(to top, #8fbb90, #4caf508a);
   color: white;
   padding: 11px 14px;
   border: none;
   border-radius: 5px;
   text-decoration: none;
   font-size: 0.8rem;
+  font-family: fangsong;
   flex: 0 1 auto;
   text-align: center;
   transition: background-color 0.3s ease;
@@ -967,7 +976,7 @@ p.ex1 {
 
   <style>
     .offer-marquee {
-      background: #626764; /* green brand color */
+      background: linear-gradient(to right, #8fbb90, #59545466); /* green brand color */
       color: white;
       font-weight: 600;
       padding: 8px 0;
@@ -1165,7 +1174,7 @@ p.ex1 {
 
 
 <section id="customerTestimonials" style="margin: 2rem auto; max-width: 1000px; overflow: hidden;">
-  <h2 style="text-align:center;color:#595454;">What Our Customers Say</h2>
+  <h2 style="text-align:center;color:#595454;font-family: fantasy">What Our Customers Say</h2>
   <div style="display: flex; width: 100%; overflow: hidden;">
     <div id="testimonialWrapper"></div>
   </div>
@@ -1187,7 +1196,7 @@ p.ex1 {
 
 
   <section class="cart-section">
-    <h2 style="text-align:center;color:#595454">Buy Online</h2>
+    <h2 style="text-align:center;color:#595454;font-family:fantasy">Buy Online</h2>
 
     <!-- Search and Filter Bar -->
     <div style="text-align: center; margin-bottom: 1rem; display: none;">
@@ -1222,7 +1231,7 @@ p.ex1 {
 </section>
 
 <section class="video-scroll-section" id="videoSection">
-  <h2 style="color: #595454">Brand Love in Motion</h2>
+  <h2 style="color: #595454;font-family: fantasy">Brand Love in Motion</h2>
   <div class="video-scroll-wrapper">
     <button class="scroll-arrow left" onclick="scrollVideos(-1)">&#10094;</button>
     <div class="video-scroll-container" id="videoScroll">
@@ -1232,11 +1241,10 @@ p.ex1 {
   </div>
 </section>
 
-
-<section class="info-section"> 
+  <section class="info-section" style="font-family:AppleSystemUIFont">
   <div class="info-container">
     <div class="info-box about">
-      <h3 style="color: #595454">About Grovikto</h3>
+      <h3 style="color: #595454;font-family: fantasy">About Grovikto</h3>
       <p>
         At <strong>Grovikto Perfumes</strong>, we believe fragrance is not just something you wear — it’s who you are. Every scent is a signature, every note a reflection of your inner world. Our philosophy is simple yet powerful: <em>Make Your Identity Now.</em>
       </p>
@@ -1255,7 +1263,7 @@ p.ex1 {
       <p><strong>Grovikto Perfumes — Make Your Identity Now.</strong></p>
     </div>
       <div class="info-box contact">
-      <h3 style="color: #595454">Contact Us</h3>
+      <h3 style="color: #595454;font-family: fantasy">Contact Us</h3>
       <p><strong>Email:</strong> <a href="mailto:verdantragrows@gmail.com">verdantragrows@gmail.com</a></p>
       <p><strong>Phone:</strong> <a href="tel:+919923566591">+91-9923566591</a></p>
       <p><strong>WhatsApp:</strong> <a href="https://wa.me/919923566591" target="_blank">Chat with us</a></p>

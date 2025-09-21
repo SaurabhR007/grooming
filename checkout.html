@@ -76,10 +76,11 @@
       color:#595454;
       margin-top: 0;
       text-align: center;
+        font-family: fantasy;
     }
 
     .btn {
-      background:#2c5c2e;
+      background:linear-gradient(to top, #8fbb90, #4caf508a);
       color: white;
       padding: 0.75rem 1.5rem;
       border: none;
@@ -89,6 +90,7 @@
       width: 100%;
       font-size: 1rem;
       font-weight: 500;
+        font-family: fangsong;
     }
 
     .btn:hover {
@@ -106,8 +108,9 @@
     }
 
     .address-button.selected {
-      background: var(--primary);
+      background:linear-gradient(to top, #8fbb90, #4caf508a);
       color: white;
+        font-family: fangsong;
     }
 
     .address-wrapper {
@@ -125,6 +128,7 @@
       padding: 4px 10px; 
       border-radius: 4px; 
       cursor: pointer;
+        font-family: fangsong;
     }
 
     .selected-address-tile {
@@ -134,6 +138,7 @@
       border-radius: 6px;
       white-space: pre-wrap;
       margin-bottom: 1rem;
+        font-family: fangsong;
     }
 
     .summary p, .summary strong {
@@ -233,7 +238,7 @@
       text-align: left;
       margin-bottom: 10px;
     }
-     .back-btn { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #2c5c2e; font-weight: bold; }
+     .back-btn { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: #2c5c2e; font-weight: bold;font-family: fongsong }
   </style>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -885,29 +890,50 @@ function showCartUpdatesPopup(updates) {
 
         // Build receipt message
         const msg =
-            `Grovikto - Make Your Identity
-             Website - www.grovikto.in
-             Contact for Query - +91-9916315079
-Order Receipt - ${orderId}
-Track your order below link
-https://www.grovikto.in/customerorder.html?orderId=${orderId}
-Subtotal      : Rs-${subtotal}
-Shipping      : Rs-${shipping}
-Coupon Applied : ${appliedCoupon1 ? appliedCoupon1 : "None"}
-Discount       : Rs-${appliedDiscount1}
-----------------
-Total         : Rs-${total}
-
-Payment Method: ${paymentMethod}
-
-Thanks For Shopping With Us. We will confirm your order soon.`;
+            `🛒 Grovikto - Make Your Identity\n` +
+            `Website - www.grovikto.in\n` +
+            `Contact for Query - +91-9916315079\n\n` +
+            `Order Receipt - ${orderId}\n` +
+            `Track your order:\nhttps://www.grovikto.in/customerorder.html?orderId=${orderId}\n\n` +
+            `Subtotal      : Rs-${subtotal}\n` +
+            `Shipping      : Rs-${shipping}\n` +
+            `Coupon Applied: ${appliedCoupon1 ? appliedCoupon1 : "None"}\n` +
+            `Discount      : Rs-${appliedDiscount1}\n` +
+            `----------------\n` +
+            `Total         : Rs-${total}\n\n` +
+            `Payment Method: ${paymentMethod}\n\n` +
+            `Thanks For Shopping With Us. We will confirm your order soon.`;
 
         // Clear cart
         localStorage.removeItem("cartData");
 
         // Show popup with order receipt
         showOrderPopup(msg);
+
+        // ✅ Send WhatsApp Message to Customer (via Meta WhatsApp Cloud API)
+        try {
+            let phonNumber = selectedAddress.phone.startsWith('91') ? selectedAddress.phone : '91' + selectedAddress.phone
+            console.log(phonNumber)
+            await fetch("https://us-central1-verdantra-grows.cloudfunctions.net/sendOrderNotificationHttp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    orderId,
+                    phone:phonNumber,
+                    name: selectedAddress.name,
+                    total
+                })
+            });
+
+
+            console.log("WhatsApp order message sent to customer!");
+        } catch (err) {
+            console.error("Failed to send WhatsApp message:", err);
+        }
+
+
     }
+
 
     function showOrderPopup(msg) {
         const popup = document.getElementById("orderPopup");
