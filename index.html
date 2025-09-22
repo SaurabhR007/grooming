@@ -785,6 +785,7 @@ p.ex1 {
   width: 100%;
   height: auto;
   margin-bottom: 0.5rem;
+  margin-top: 2.0rem;
 }
 
 .tagline {
@@ -986,14 +987,15 @@ p.ex1 {
 
   <style>
     .offer-marquee {
-      background: linear-gradient(to right, #8fbb90, #59545466); /* green brand color */
+      background: linear-gradient(to right, #8fbb90, #59545466);
       color: white;
       font-weight: 600;
       padding: 8px 0;
       overflow: hidden;
       white-space: nowrap;
-      position: relative;
+      position: fixed;
       z-index: 999;
+      width: 100%;
     }
 
     .marquee {
@@ -1086,14 +1088,14 @@ p.ex1 {
   });
 </script>
 
+  <!-- 🔥 Marquee Offer Banner -->
+  <section class="offer-marquee">
+    <div class="marquee" id="marquee-offers"></div>
+  </section>
 
 
   <header class="main-header">
 
-    <!-- 🔥 Marquee Offer Banner -->
-    <section class="offer-marquee">
-      <div class="marquee" id="marquee-offers"></div>
-    </section>
 
     <img src="https://verdantragrows.my.canva.site/_assets/media/5905e8339237cf372183c523f1486957.png" alt="Verdantra Logo" class="logo"/>
   <p class="tagline">Make Your Identity</p>
