@@ -7,17 +7,18 @@
   <title>Buy Luxury Perfumes Online | Grovikto</title>
   <meta name="description" content="Discover Grovikto Perfumes — crafted with pure essences and rare botanicals. Luxury fragrances that define you. Make Your Identity Now.">
   <meta name="keywords" content="luxury perfumes, natural perfumes, Grovikto, Grovikto perfumes, Grovikto fragrances, niche perfumes, signature scents, make your identity now, Grovikto luxury perfumes, Grovikto natural perfumes, perfumes, luxury fragrances, unisex perfumes, long-lasting perfumes, premium perfumes, exclusive perfumes, artisan perfumes, best perfumes online, designer fragrances, handcrafted perfumes, eau de parfum, eau de toilette, luxury scent collection, unique perfumes, exotic perfumes, sensual perfumes, personalized perfumes, high-end perfumes, fragrance for men, fragrance for women, buy perfumes online, international perfumes, luxury perfume brand">
-  <!-- SEO -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="style.3.css">
-  <script src="script.3.js"></script>
   <head>
     <link rel="apple-touch-icon" sizes="180x180" href="https://verdantragrows.my.canva.site/_assets/media/5905e8339237cf372183c523f1486957.png">
     <link rel="icon" type="image/png" href="https://verdantragrows.my.canva.site/_assets/media/5905e8339237cf372183c523f1486957.png">
   </head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- SEO -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="style.3.css">
+  <script src="script.3.js"></script>
+
 
   <style>
     @font-face {
@@ -42,7 +43,7 @@
       margin-bottom: 0rem;
     }
     .logo {
-      max-width: 300px;
+      max-width: 100px;
       margin-top: 10px;
       opacity: 0.8;
     }
@@ -81,15 +82,16 @@
       justify-content: center;
       gap: 1rem;
     }
- .cart-product {
-  border: 1px solid #ccc;
-  padding: 0.7rem;
-  width: 200px; /* slightly narrower */
-  border-radius: 10px;
-  text-align: center;
-  background: white;
-  min-height: 285px; /* control height */
-   }
+    .cart-product {
+      /* border: 1px solid #9ece9e; */
+      padding: 0.7rem;
+      width: 200px;
+      border-radius: 10px;
+      text-align: center;
+      background: white;
+      min-height: 285px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
 
    @media (max-width: 599px) {
   .cart-product {
@@ -245,9 +247,10 @@
       top: 46px;
       left: 10px;
       z-index: 1001;
-      background:linear-gradient(to top, #8fbb90, #4caf508a);
-      color: white;
+      background: #ffffffdd;
+      color: #93c094;
       border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
     .sidebar {
       position: fixed;
@@ -270,7 +273,7 @@
       font-weight: bold;
     }
     .sidebar a:hover {
-      background-color: #2c5c2e;
+      background:linear-gradient(to top, #8fbb90, #4caf508a);
     }
     .toast {
   visibility: hidden;
@@ -295,17 +298,17 @@
     margin: 2rem 0 1rem;
     gap: 1rem;
   }
-
-  .tab-btn {
-    padding: 10px 16px;
-    border-radius: 5px;
-    border: 0.1px solid #2c5c2e;
-    color: #151515;
-    background: #fbfbfb;
-    font-weight: bold;
-    cursor: pointer;
-    font-family: fongsong;
-  }
+    .tab-btn {
+     padding: 10px 16px;
+     border-radius: 5px;
+     border: 0px solid #2c5c2e;
+     color: #89b48a;
+     background: #ffffff;
+     font-weight: bold;
+     cursor: pointer;
+     font-family: fongsong;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+   }
   .tab-btn.active {
     background:linear-gradient(to top, #8fbb90, #4caf508a);
     color: white;
@@ -360,16 +363,17 @@
   gap: 6px;
   margin: 10px 0;
 }
-.segment-btn {
-  padding: 6px 12px;
-  border-radius: 5px;
-  border: 0.1px solid #1b1c1b;
-  background: #fff;
-  color: black;
-  font-size: 0.9rem;
-  cursor: pointer;
-  font-weight: bold;
-}
+    .segment-btn {
+      padding: 6px 12px;
+      border-radius: 5px;
+      border: 0px solid #1b1c1b;
+      background: #fff;
+      color: #89b48a;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
 .segment-btn.active {
   background:#99c99a;
   color: white;
@@ -783,19 +787,23 @@ p.ex1 {
   right: -20px;
 }
 
-.main-header {
-  text-align: center;
-  padding: 1rem;
-  background-color: #fff;
-}
+ main-header {
+   text-align: center;
+   padding: 1rem;
+   background-color: #fff;
+   position: fixed;
+   z-index: 666;
+   width: 100%;
+ }
 
-.logo {
-  max-width: 180px;
-  width: 28%;
-  height: auto;
-  margin-bottom: 0.5rem;
-  margin-top: 2.0rem;
-}
+
+ .logo {
+   max-width: 180px;
+   width: 23%;
+   height: auto;
+   margin-bottom: 0.5rem;
+   margin-top: 2.5rem;
+ }
 
 .tagline {
   font-size: 1.2rem;
@@ -888,10 +896,10 @@ p.ex1 {
 </style>
 
 <style>
-.info-section {
-  background-color: #f9f9f9;
-  padding: 15px 0px;
-}
+  .info-section {
+    background-color: #ffffff;
+    padding: 15px 0px;
+  }
 
 .info-container {
   display: flex;
@@ -1055,7 +1063,7 @@ p.ex1 {
      <p>Delivery Charges: Rs.<span id="deliverycharges">0</span></p>
     <strong>Total: Rs.<span id="cartTotal">0</span></strong>
   </div>
-    <a onclick="redirectToCheckout()" class="button1">Place Order</a>
+    <a onclick="handleCartClick()" class="button1">Place Order</a>
   </div>
   <h3>Your Cart</h3>
   <div id="cartItemsContainer"></div>
@@ -1110,7 +1118,7 @@ p.ex1 {
     <!--    <i class="fa-solid fa-phone"></i>-->
     <a href="tel:+919923566591" class="action-btn call-btn"><i class="fa-solid fa-phone"></i></a>
     <a href="https://wa.me/919923566591?text=Hi%2C%20I'm%20interested%20in%20Grovikto%20products" class="action-btn chat-btn" target="_blank"><i class="fa-solid fa-comment"></i></a>
-    <!--    <a href="javascript:void(0);" class="action-btn cart-btn" onclick="handleCartClick()">🛒 CART <span id="cartCount">0</span></a>-->
+    <a href="javascript:void(0);" class="action-btn cart-btn" onclick="handleCartClick()" style="display: none"><i class="fa-solid fa-cart-shopping"></i><span id="cartCount">0</span></a>
   </div>
 
   <header class="main-header">
@@ -1296,8 +1304,7 @@ p.ex1 {
 
 
   <div id="toast" class="toast">Your cart is empty. Please select a product.</div>
-  <a href="javascript:void(0);" class="floating-cart" onclick="handleCartClick()">
-    🛒 <span id="floatingCartCount">0</span>
+  <a href="javascript:void(0);" class="floating-cart" onclick="handleCartClick()"><i class="fa-solid fa-cart-shopping"></i><span id="floatingCartCount">0</span>
   </a>
 
   <script>
@@ -1727,7 +1734,7 @@ function showToast(message) {
 
 
 
-/*  function handleCartClick() {
+  function handleCartClick() {
     const totalQty = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
     if (totalQty === 0) {
       showToast("🛒 Your cart is empty. Please select a product.");
@@ -1735,7 +1742,6 @@ function showToast(message) {
       window.location.href = "checkout.html";
     }
   }
-*/
   function redirectToCheckout() {
     const totalQty = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
     if (totalQty === 0) {
@@ -2063,7 +2069,7 @@ function removeAllOfProduct(productId) {
     function handleCartClick() {
       const totalQty = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
       if (totalQty === 0) {
-        alert("🛒 Your cart is empty. Please select a product.");
+        alert("<i class=\"fa-solid fa-cart-shopping\"></i> Your cart is empty. Please select a product.");
       } else {
         toggleCartDrawer(true);
       }
