@@ -1195,16 +1195,13 @@ p.ex1 {
 }
 </style>
 
-  <section class="video-scroll-section" id="videoSection">
-    <h2 style="color: #595454;font-family: fantasy">Brand Love in Motion</h2>
-    <div class="video-scroll-wrapper">
-      <button class="scroll-arrow left" onclick="scrollVideos(-1)">&#10094;</button>
-      <div class="video-scroll-container" id="videoScroll">
-        <!-- Firebase videos will be injected here -->
-      </div>
-      <button class="scroll-arrow right" onclick="scrollVideos(1)">&#10095;</button>
+  <section id="customerTestimonials" style="margin: 2rem auto; max-width: 1000px; overflow: hidden;">
+    <h2 style="text-align:center;color:#595454;font-family: fantasy">What Our Customers Say</h2>
+    <div style="display: flex; width: 100%; overflow: hidden;">
+      <div id="testimonialWrapper"></div>
     </div>
   </section>
+
 <script>
   const wrapper = document.getElementById("testimonialWrapper");
 
@@ -1255,12 +1252,18 @@ p.ex1 {
   </div>
 </section>
 
-  <section id="customerTestimonials" style="margin: 2rem auto; max-width: 1000px; overflow: hidden;">
-    <h2 style="text-align:center;color:#595454;font-family: fantasy">What Our Customers Say</h2>
-    <div style="display: flex; width: 100%; overflow: hidden;">
-      <div id="testimonialWrapper"></div>
+  <section class="video-scroll-section" id="videoSection">
+    <h2 style="color: #595454;font-family: fantasy">Brand Love in Motion</h2>
+    <div class="video-scroll-wrapper">
+      <button class="scroll-arrow left" onclick="scrollVideos(-1)">&#10094;</button>
+      <div class="video-scroll-container" id="videoScroll">
+        <!-- Firebase videos will be injected here -->
+      </div>
+      <button class="scroll-arrow right" onclick="scrollVideos(1)">&#10095;</button>
     </div>
   </section>
+
+
   <section class="info-section" style="font-family:AppleSystemUIFont">
   <div class="info-container">
     <div class="info-box about">
