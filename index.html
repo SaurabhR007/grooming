@@ -19,17 +19,21 @@
   <link rel="stylesheet" href="style.3.css">
   <script src="script.3.js"></script>
 
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <style>
-    @font-face {
-      font-family: 'fantasy';
-      url('fantasy.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
+    .Audiowide {
+      font-family: 'Audiowide', fantasy;
+      font-size: 32px;
+      color: darkred;
     }
+  </style>
+
+
+  <style>
 
     body {
-      font-family: 'fantasy', cursive;
+      font-family: 'Audiowide', cursive;
     }
         body {
       font-family: 'Segoe UI', sans-serif;
@@ -451,7 +455,7 @@
   z-index: 999;
   width: 90%;
   max-width: 360px;
-  font-family: fantasy;
+  font-family: Audiowide;
   font-weight: 500;
 }
 
@@ -809,7 +813,7 @@ p.ex1 {
   font-size: 1.2rem;
   color: darkgreen;
   margin: 0.1rem 0 1rem;
-  font-family:fantasy;
+  font-family:Audiowide;
 }
 
 
@@ -1063,7 +1067,7 @@ p.ex1 {
      <p>Delivery Charges: Rs.<span id="deliverycharges">0</span></p>
     <strong>Total: Rs.<span id="cartTotal">0</span></strong>
   </div>
-    <a onclick="handleCartClick()" class="button1">Place Order</a>
+    <a onclick="redirectToCheckout()" class="button1">Place Order</a>
   </div>
   <h3>Your Cart</h3>
   <div id="cartItemsContainer"></div>
@@ -1072,15 +1076,15 @@ p.ex1 {
 <script>
   // Click outside to close
   document.addEventListener("click", function(event) {
-    const drawer = document.getElementById("cartDrawer");
+  //  const drawer = document.getElementById("cartDrawer");
     const drawer1 = document.getElementById("sidebar");
-     if (!drawer.contains(event.target)) {
-         if (isCartOpen){
-             isCartOpen = false;
-          }else{
-            toggleCartDrawer(false);
-          }
-     }
+     // if (!drawer.contains(event.target)) {
+     //     if (isCartOpen){
+     //         isCartOpen = false;
+     //      }else{
+     //        toggleCartDrawer(false);
+     //      }
+     // }
 
       if (!drawer1.contains(event.target))
       {
@@ -1204,7 +1208,7 @@ p.ex1 {
 </style>
 
   <section id="customerTestimonials" style="margin: 2rem auto; max-width: 1000px; overflow: hidden;">
-    <h2 style="text-align:center;color:#595454;font-family: fantasy">What Our Customers Say</h2>
+    <h2 style="text-align:center;color:#595454;font-family: Audiowide">What Our Customers Say</h2>
     <div style="display: flex; width: 100%; overflow: hidden;">
       <div id="testimonialWrapper"></div>
     </div>
@@ -1226,7 +1230,7 @@ p.ex1 {
 
 
   <section class="cart-section">
-    <h2 style="text-align:center;color:#595454;font-family:fantasy">Buy Online</h2>
+    <h2 style="text-align:center;color:#595454;font-family:Audiowide">Buy Online</h2>
 
     <!-- Search and Filter Bar -->
     <div style="text-align: center; margin-bottom: 1rem; display: none;">
@@ -1239,7 +1243,7 @@ p.ex1 {
     <section class="tabs" id="categoryTabs"></section>
     <div class="product-list" id="productList"></div>
     <div style="text-align:center; margin-top: 0.6rem;align-items: center;">
-      <a onclick="redirectToCheckout()" class="button1" style="width: 30%">Place Order</a>
+      <a onclick="handleCartClick()" class="button1" style="width: 30%">Place Order</a>
     </div>
   </section>
 
@@ -1261,7 +1265,7 @@ p.ex1 {
 </section>
 
   <section class="video-scroll-section" id="videoSection">
-    <h2 style="color: #595454;font-family: fantasy">Brand Love in Motion</h2>
+    <h2 style="color: #595454;font-family: Audiowide">Brand Love in Motion</h2>
     <div class="video-scroll-wrapper">
       <button class="scroll-arrow left" onclick="scrollVideos(-1)">&#10094;</button>
       <div class="video-scroll-container" id="videoScroll">
@@ -1275,7 +1279,7 @@ p.ex1 {
   <section class="info-section" style="font-family:AppleSystemUIFont">
   <div class="info-container">
     <div class="info-box about">
-      <h3 style="color: #595454;font-family: fantasy">About Grovikto</h3>
+      <h3 style="color: #595454;font-family: Audiowide">About Grovikto</h3>
       <p>
         At <strong>Grovikto Perfumes</strong>, we believe fragrance is not just something you wear — it’s who you are. Every scent is a signature, every note a reflection of your inner world. Our philosophy is simple yet powerful: <em>Make Your Identity Now.</em>
       </p>
@@ -1294,7 +1298,7 @@ p.ex1 {
       <p><strong>Grovikto Perfumes — Make Your Identity Now.</strong></p>
     </div>
       <div class="info-box contact">
-      <h3 style="color: #595454;font-family: fantasy">Contact Us</h3>
+      <h3 style="color: #595454;font-family: Audiowide">Contact Us</h3>
       <p><strong>Email:</strong> <a href="mailto:verdantragrows@gmail.com">verdantragrows@gmail.com</a></p>
       <p><strong>Phone:</strong> <a href="tel:+919923566591">+91-9923566591</a></p>
       <p><strong>WhatsApp:</strong> <a href="https://wa.me/919923566591" target="_blank">Chat with us</a></p>
@@ -1703,6 +1707,10 @@ function renderProducts() {
   renderProducts();
   updateCartBadge();
   renderCartDrawerItems();
+  const totalQty = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+   if (totalQty === 1) {
+     handleCartClick()
+   }
 }
 
 
